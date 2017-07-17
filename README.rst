@@ -7,7 +7,8 @@ speckenv because a speck is a synonym for a dot and because Speck is awesome.
 Usage
 =====
 
-Read the settings contained in ``./.env`` into ``os.environ``::
+Read the settings contained in ``./.env`` into ``os.environ`` (or a
+different mapping; pass a dict-like object as ``mapping``)::
 
     from speckenv import read_speckenv
 
@@ -27,6 +28,8 @@ Read individual values::
     SETTING1 = env('SETTING1')
     SETTING2 = env('SETTING2', default='bla')
     SETTING3 = env('SETTING3 ', required=True)  # Fail hard if missing.
+
+    # Different mapping: env('SOMETHING', mapping=...)
 
 The following values are evaluated as Python literals::
 

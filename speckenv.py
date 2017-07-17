@@ -8,13 +8,15 @@ import warnings
 def read_speckenv(filename='.env', mapping=os.environ):
     """
     Writes the values in ``.env`` in the current working folder into
-    ``os.environ`` if the keys do not exist already.
+    ``os.environ`` (or a different ``mapping``) if the keys do not exist
+    already.
 
     Example::
 
         DATABASE_URL=...
         CACHE_URL = '...'
         SECRET_KEY = "...."
+        # Ignored
     """
     path = os.path.join(
         os.getcwd(),
@@ -35,8 +37,9 @@ def read_speckenv(filename='.env', mapping=os.environ):
 
 def env(key, default=None, required=False, mapping=os.environ):
     """
-    An easier way to read values from the environment. Knows how to convert
-    Pythonic values such as ``42``, ``None`` into the correct type.
+    An easier way to read values from the environment (or from a different
+    ``mapping``). Knows how to convert literals such as ``42``, ``None`` or
+    ``[1, 2, 'c']`` into the correct type.
     """
     try:
         value = mapping[key]
