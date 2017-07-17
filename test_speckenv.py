@@ -14,7 +14,7 @@ class EnvTestCase(TestCase):
         )
 
         with tempfile.NamedTemporaryFile() as f:
-            f.write('''
+            f.write(b'''
 DATABASE_URL=postgres://localhost:5432/example_com
 ALLOWED_HOSTS=['*']
 
@@ -76,7 +76,7 @@ class CustomMappingTestCase(TestCase):
     def test_custom_mapping(self):
         mapping = {}
         with tempfile.NamedTemporaryFile() as f:
-            f.write('''
+            f.write(b'''
 CUSTOM_MAPPING=yes
 ''')
 
