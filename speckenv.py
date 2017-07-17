@@ -5,7 +5,7 @@ import os
 import warnings
 
 
-def read_speckenv(filename='.env'):
+def read_speckenv(filename='.env', mapping=os.environ):
     """
     Writes the values in ``.env`` in the current working folder into
     ``os.environ`` if the keys do not exist already.
@@ -30,16 +30,16 @@ def read_speckenv(filename='.env'):
             if not line or line.startswith('#') or '=' not in line:
                 continue
             key, value = [v.strip('\'" \t') for v in line.split('=', 1)]
-            os.environ.setdefault(key, value)
+            mapping.setdefault(key, value)
 
 
-def env(key, default=None, required=False):
+def env(key, default=None, required=False, mapping=os.environ):
     """
     An easier way to read values from the environment. Knows how to convert
     Pythonic values such as ``42``, ``None`` into the correct type.
     """
     try:
-        value = os.environ[key]
+        value = mapping[key]
         return ast.literal_eval(value)
     except (SyntaxError, ValueError):
         return value

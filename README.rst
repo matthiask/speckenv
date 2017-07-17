@@ -36,3 +36,7 @@ The following values are evaluated as Python literals::
 
 Additional whitespace around the equals sign is supported. Empty lines and
 lines starting with a ``#`` are ignored.
+
+**NOTE!** You should treat everything except for the first argument to
+both ``env`` and ``read_speckenv`` as keyword-only. Since speckenv still
+supports Python 2 this isn't enforced by the code right now.
