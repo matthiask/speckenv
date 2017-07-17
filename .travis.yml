@@ -1,5 +1,4 @@
 language: python
-cache: pip
 sudo: false
 python:
   - "2.7"
@@ -7,6 +6,4 @@ python:
   - "3.5"
   - "3.6"
 script:
-  - pip install -U pip wheel
-  - pip install flake8
-  - ./setup.py test && flake8 .
+  - ./setup.py test
