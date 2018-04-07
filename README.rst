@@ -28,6 +28,8 @@ Read individual values::
     SETTING1 = env('SETTING1')
     SETTING2 = env('SETTING2', default='bla')
     SETTING3 = env('SETTING3 ', required=True)  # Fail hard if missing.
+    SETTING4 = env('SETTING4', coerce=bool)  # Coercion is also applied
+                                             # to default values
 
     # Different mapping: env('SOMETHING', mapping=...)
 

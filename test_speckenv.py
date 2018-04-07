@@ -38,6 +38,10 @@ COMMENTED=ignored
             speckenv.env('ALLOWED_HOSTS'),
             ['*'],
         )
+        self.assertEqual(
+            speckenv.env('ALLOWED_HOSTS', coerce=tuple),
+            ('*',),
+        )
 
         # First not-commented out value
         self.assertEqual(
@@ -49,6 +53,10 @@ COMMENTED=ignored
         self.assertEqual(
             speckenv.env('UNDEFINED'),
             None,
+        )
+        self.assertIs(
+            speckenv.env('UNDEFINED', coerce=bool),
+            False,
         )
         self.assertRaises(
             Exception,

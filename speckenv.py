@@ -35,20 +35,22 @@ def read_speckenv(filename='.env', mapping=os.environ):
             mapping.setdefault(key, value)
 
 
-def env(key, default=None, required=False, mapping=os.environ):
+def env(key, default=None, required=False, mapping=os.environ, coerce=None):
     """
     An easier way to read values from the environment (or from a different
     ``mapping``). Knows how to convert literals such as ``42``, ``None`` or
     ``[1, 2, 'c']`` into the correct type.
     """
+    if coerce is None:
+        coerce = lambda x: x
     try:
         value = mapping[key]
-        return ast.literal_eval(value)
+        return coerce(ast.literal_eval(value))
     except (SyntaxError, ValueError):
-        return value
+        return coerce(value)
     except KeyError:
         if required:
             raise Exception(
                 'Required key %s not available in environment'
                 % repr(key))
-        return default
+        return coerce(default)
