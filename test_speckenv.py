@@ -78,6 +78,10 @@ COMMENTED=ignored
             speckenv.env('COMMENTED', default=42),
             'no',
         )
+        self.assertIs(
+            speckenv.env('COMMENTED', default='bla', coerce=bool),
+            True,
+        )
 
 
 class CustomMappingTestCase(TestCase):
