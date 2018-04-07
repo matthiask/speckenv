@@ -13,7 +13,7 @@ def read(filename):
 
 setup(
     name='speckenv',
-    version='1.1',
+    version='1.2',
     description='',
     long_description=read('README.rst'),
     author='Matthias Kestenholz',
