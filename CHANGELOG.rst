@@ -5,6 +5,9 @@ Change log
 `Next version`_
 ~~~~~~~~~~~~~~~
 
+- Reformat the code using black.
+
+
 `1.2`_ (2018-04-07)
 ~~~~~~~~~~~~~~~~~~~
 
