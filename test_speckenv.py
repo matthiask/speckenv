@@ -3,13 +3,11 @@ from __future__ import unicode_literals
 import os
 import speckenv
 import tempfile
-from unittest import TestCase
+from unittest import TestCase, expectedFailure
 
 
 class EnvTestCase(TestCase):
-    def test_read(self):
-        self.assertNotIn("ALLOWED_HOSTS", os.environ)
-
+    def setUp(self):
         with tempfile.NamedTemporaryFile() as f:
             f.write(
                 b"""
@@ -19,6 +17,9 @@ ALLOWED_HOSTS=['*']
 # COMMENTED=yes
 COMMENTED=no
 COMMENTED=ignored
+
+COMMENT_STR=value  # TEST
+COMMENT_INT=42  # TEST
 """
             )
 
@@ -26,6 +27,7 @@ COMMENTED=ignored
 
             speckenv.read_speckenv(f.name)
 
+    def test_read(self):
         # Bare value
         self.assertEqual(os.environ.get("ALLOWED_HOSTS"), "['*']")
 
@@ -46,6 +48,14 @@ COMMENTED=ignored
         self.assertEqual(speckenv.env("DEFAULT", default=42), 42)
         self.assertEqual(speckenv.env("COMMENTED", default=42), "no")
         self.assertIs(speckenv.env("COMMENTED", default="bla", coerce=bool), True)
+
+    @expectedFailure
+    def test_inline_comment_str(self):
+        self.assertEqual(speckenv.env("COMMENT_STR"), "value")
+
+    def test_inline_comment_int(self):
+        # Works because ast.literal_eval also knows how to handle comments...
+        self.assertEqual(speckenv.env("COMMENT_INT"), 42)
 
 
 class CustomMappingTestCase(TestCase):
