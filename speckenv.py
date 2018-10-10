@@ -20,7 +20,7 @@ def read_speckenv(filename=".env", mapping=os.environ):
     """
     path = os.path.join(os.getcwd(), filename)
     if not os.path.isfile(path):
-        warnings.warn("%s not a file, not reading anything" % filename)
+        warnings.warn("%s not a file, not reading anything" % filename, stacklevel=2)
         return
     # Not sure whether we should try handling other encodings than ASCII
     # at all...
@@ -54,5 +54,7 @@ def env(
         if required:
             raise Exception("Required key %s not available in environment" % repr(key))
         if warn:
-            warnings.warn("Key %s not available in environment" % repr(key))
+            warnings.warn(
+                "Key %s not available in environment" % repr(key), stacklevel=2
+            )
         return coerce(default)
