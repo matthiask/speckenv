@@ -19,6 +19,7 @@ COMMENTED=no
 COMMENTED=ignored
 
 COMMENT_STR=value  # TEST
+COMMENT_STR_QUOTED="value  # TEST"
 COMMENT_INT=42  # TEST
 """
             )
@@ -52,6 +53,9 @@ COMMENT_INT=42  # TEST
     @expectedFailure
     def test_inline_comment_str(self):
         self.assertEqual(speckenv.env("COMMENT_STR"), "value")
+
+    def test_inline_comment_str_quoted(self):
+        self.assertEqual(speckenv.env("COMMENT_STR_QUOTED"), "value  # TEST")
 
     def test_inline_comment_int(self):
         # Works because ast.literal_eval also knows how to handle comments...
