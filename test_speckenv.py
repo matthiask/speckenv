@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import os
 import speckenv
 import tempfile
+import warnings
 from unittest import TestCase, expectedFailure
 
 
@@ -21,6 +22,8 @@ COMMENTED=ignored
 COMMENT_STR=value  # TEST
 COMMENT_STR_QUOTED="value  # TEST"
 COMMENT_INT=42  # TEST
+
+NO_EQUAL_SIGN
 """
             )
 
@@ -49,6 +52,8 @@ COMMENT_INT=42  # TEST
         self.assertEqual(speckenv.env("DEFAULT", default=42), 42)
         self.assertEqual(speckenv.env("COMMENTED", default=42), "no")
         self.assertIs(speckenv.env("COMMENTED", default="bla", coerce=bool), True)
+
+        self.assertNotIn("NO_EQUAL_SIGN", os.environ)
 
     @expectedFailure
     def test_inline_comment_str(self):
@@ -79,3 +84,36 @@ CUSTOM_MAPPING=yes
         self.assertNotIn("CUSTOM_MAPPING", os.environ)
 
         self.assertEqual(speckenv.env("CUSTOM_MAPPING", mapping=mapping), "yes")
+
+
+class WarningsTestCase(TestCase):
+    def test_no_file(self):
+        i = 0
+        while True:
+            filename = "env-{}".format(i)
+            if not os.path.exists(filename):
+                break
+            i = i + 1  # pragma: no cover
+
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            speckenv.read_speckenv(filename)
+
+            self.assertEqual(len(w), 1)
+            self.assertIn(
+                "{} not a file, not reading anything".format(filename),
+                "{}".format(w[0].message),
+            )
+
+    def test_not_exists(self):
+        mapping = {"EXISTS": True}
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+
+            speckenv.env("EXISTS", mapping=mapping, warn=True)
+            speckenv.env("NOT", mapping=mapping, warn=True)
+
+            self.assertEqual(len(w), 1)
+            self.assertIn(
+                "Key 'NOT' not available in environment", "{}".format(w[0].message)
+            )
