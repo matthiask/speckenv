@@ -6,6 +6,8 @@ Change log
 ~~~~~~~~~~~~~~~
 
 - Reformat the code using black.
+- Added a ``warn`` parameter to ``env`` which causes warnings to be
+  emitted when a variable isn't set in the environment.
 
 
 `1.2`_ (2018-04-07)

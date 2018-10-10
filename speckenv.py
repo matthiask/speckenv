@@ -37,7 +37,9 @@ def identity(x):
     return x
 
 
-def env(key, default=None, required=False, mapping=os.environ, coerce=identity):
+def env(
+    key, default=None, required=False, mapping=os.environ, coerce=identity, warn=False
+):
     """
     An easier way to read values from the environment (or from a different
     ``mapping``). Knows how to convert literals such as ``42``, ``None`` or
@@ -51,4 +53,6 @@ def env(key, default=None, required=False, mapping=os.environ, coerce=identity):
     except KeyError:
         if required:
             raise Exception("Required key %s not available in environment" % repr(key))
+        if warn:
+            warnings.warn("Key %s not available in environment" % repr(key))
         return coerce(default)
