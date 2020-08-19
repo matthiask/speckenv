@@ -10,4 +10,4 @@ python:
   - "3.8"
   - "3.9-dev"
 script:
-  - ./setup.py test
+  - python setup.py test
