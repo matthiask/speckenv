@@ -8,7 +8,9 @@ Usage
 =====
 
 Read the settings contained in ``./.env`` into ``os.environ`` (or a
-different mapping; pass a dict-like object as ``mapping``)::
+different mapping; pass a dict-like object as ``mapping``):
+
+.. code-block:: python
 
     from speckenv import read_speckenv
 
@@ -21,23 +23,25 @@ first value is retained, not the last.
 If the file is named differently or resides in a different path, pass the
 full path as first argument to ``read_speckenv``.
 
-Read individual values::
+Read individual values:
+
+.. code-block:: python
 
     from speckenv import env
 
-    SETTING1 = env('SETTING1')
-    SETTING2 = env('SETTING2', default='bla')
-    SETTING3 = env('SETTING3 ', required=True)  # Fail hard if missing.
-    SETTING4 = env('SETTING4', coerce=bool)  # Coercion is also applied
+    SETTING1 = env("SETTING1")
+    SETTING2 = env("SETTING2", default="bla")
+    SETTING3 = env("SETTING3", required=True)  # Fail hard if missing.
+    SETTING4 = env("SETTING4", coerce=bool)  # Coercion is also applied
                                              # to default values
 
-    # Different mapping: env('SOMETHING', mapping=...)
+    # Different mapping: env("SOMETHING", mapping=...)
 
 The following values are evaluated as Python literals::
 
     BOOL=True  # And False, None etc.
     NUMBER=42
-    SWEET_HOME=['localhost', '127.0.0.1']
+    SWEET_HOME=["localhost", "127.0.0.1"]
 
 Additional whitespace around the equals sign is supported. Empty lines and
 lines starting with a ``#`` are ignored.
