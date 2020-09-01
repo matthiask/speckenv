@@ -5,6 +5,12 @@ Change log
 `Next version`_
 ~~~~~~~~~~~~~~~
 
+- Raised code coverage to 100%.
+- Removed an usage of ``repr()`` to avoid differences between Python 2
+  and 3.
+- Verified support for Python 3.7, 3.8 and 3.9.
+
+
 `1.3`_ (2018-10-10)
 ~~~~~~~~~~~~~~~~~~~
 
