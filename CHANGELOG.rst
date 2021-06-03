@@ -5,6 +5,13 @@ Change log
 `Next version`_
 ~~~~~~~~~~~~~~~
 
+- Renamed the main branch to main.
+- Switched from Travis CI to GitHub actions.
+
+
+`1.4`_ (2020-09-01)
+~~~~~~~~~~~~~~~~~~~
+
 - Raised code coverage to 100%.
 - Removed an usage of ``repr()`` to avoid differences between Python 2
   and 3.
@@ -44,4 +51,4 @@ Change log
 .. _1.2: https://github.com/matthiask/speckenv/compare/1.1...1.2
 .. _1.3: https://github.com/matthiask/speckenv/compare/1.2...1.3
 .. _1.4: https://github.com/matthiask/speckenv/compare/1.3...1.4
-.. _Next version: https://github.com/matthiask/speckenv/compare/1.4...master
+.. _Next version: https://github.com/matthiask/speckenv/compare/1.4...main
