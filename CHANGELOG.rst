@@ -10,6 +10,7 @@ Change log
 - Raised the minimum Python version to 3.6. Added 3.10.
 - Made all but the first argument to ``env`` (and ``read_speckenv``)
   keyword-only.
+- Converted the package to use a declarative setup.
 
 
 `1.4`_ (2020-09-01)
