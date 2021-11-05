@@ -8,6 +8,8 @@ Change log
 - Renamed the main branch to main.
 - Switched from Travis CI to GitHub actions.
 - Raised the minimum Python version to 3.6. Added 3.10.
+- Made all but the first argument to ``env`` (and ``read_speckenv``)
+  keyword-only.
 
 
 `1.4`_ (2020-09-01)

@@ -5,7 +5,7 @@ import os
 import warnings
 
 
-def read_speckenv(filename=".env", mapping=os.environ):
+def read_speckenv(filename=".env", *, mapping=os.environ):
     """
     Writes the values in ``.env`` in the current working folder into
     ``os.environ`` (or a different ``mapping``) if the keys do not exist
@@ -38,7 +38,13 @@ def identity(x):
 
 
 def env(
-    key, default=None, required=False, mapping=os.environ, coerce=identity, warn=False
+    key,
+    *,
+    default=None,
+    required=False,
+    mapping=os.environ,
+    coerce=identity,
+    warn=False
 ):
     """
     An easier way to read values from the environment (or from a different
