@@ -2,10 +2,16 @@
 
 import ast
 import os
+from typing import Any, Callable, MutableMapping, TypeVar
 import warnings
 
 
-def read_speckenv(filename=".env", *, mapping=os.environ):
+T = TypeVar("T")
+
+
+def read_speckenv(
+    filename: str = ".env", *, mapping: MutableMapping[str, str] = os.environ
+) -> None:
     """
     Writes the values in ``.env`` in the current working folder into
     ``os.environ`` (or a different ``mapping``) if the keys do not exist
@@ -33,19 +39,19 @@ def read_speckenv(filename=".env", *, mapping=os.environ):
             mapping.setdefault(key, value)
 
 
-def identity(x):
+def identity(x: T) -> T:
     return x
 
 
 def env(
-    key,
+    key: str,
     *,
-    default=None,
-    required=False,
-    mapping=os.environ,
-    coerce=identity,
-    warn=False
-):
+    default: T = None,
+    required: bool = False,
+    mapping: MutableMapping[str, str] = os.environ,
+    coerce: Callable[[Any], Any] = identity,
+    warn: bool = False
+) -> T:
     """
     An easier way to read values from the environment (or from a different
     ``mapping``). Knows how to convert literals such as ``42``, ``None`` or
