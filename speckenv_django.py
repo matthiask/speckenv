@@ -8,7 +8,7 @@ INTERESTING_DATABASE_BACKENDS = {
     "postgres": "django.db.backends.postgresql",
     "postgis": "django.contrib.gis.db.backends.postgis",
     "sqlite": "django.db.backends.sqlite3",
-    # Not really but we're generous:
+    # Not really but I'm feeling generous:
     "mysql": "django.db.backends.mysql",
 }
 
