@@ -29,7 +29,7 @@ def django_database_url(s):
     config = {
         "ENGINE": INTERESTING_DATABASE_BACKENDS.get(parsed.scheme, parsed.scheme),
         "NAME": unquote(parsed.path.strip("/")),
-        "USER": unquote(parsed.username),
+        "USER": unquote(parsed.username or ""),
         "PASSWORD": unquote(parsed.password or ""),
         "HOST": unquote(parsed.hostname or ""),
         "PORT": str(parsed.port) if parsed.port else "",
