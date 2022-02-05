@@ -6,6 +6,7 @@ Change log
 ~~~~~~~~~~~~~~~
 
 - Added type hints.
+- Raised the minimum Python version to 3.8.
 
 
 `2.0`_ (2021-11-05)
