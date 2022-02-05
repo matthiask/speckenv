@@ -7,6 +7,9 @@ Change log
 
 - Added type hints.
 - Raised the minimum Python version to 3.8.
+- Added a ``speckenv_django`` module containing basic and extremely opinionated
+  and limited utilities to parse database and cache DSNs into configuration
+  dictionaries usable by Django.
 
 
 `2.0`_ (2021-11-05)

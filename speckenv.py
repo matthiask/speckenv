@@ -50,7 +50,7 @@ def env(
     required: bool = False,
     mapping: MutableMapping[str, str] = os.environ,
     coerce: Callable[[Any], Any] = identity,
-    warn: bool = False
+    warn: bool = False,
 ) -> T:
     """
     An easier way to read values from the environment (or from a different

@@ -4,6 +4,7 @@ import os
 import speckenv
 import tempfile
 import warnings
+from speckenv_django import django_cache_url, django_database_url
 from unittest import TestCase, expectedFailure
 
 
@@ -117,3 +118,49 @@ class WarningsTestCase(TestCase):
             self.assertIn(
                 "Key 'NOT' not available in environment", "{}".format(w[0].message)
             )
+
+
+class TwelveFactorTestCase(TestCase):
+    def setUp(self):
+        self.mapping = {}
+
+        with tempfile.NamedTemporaryFile() as f:
+            f.write(
+                b"""
+DATABASE_URL=postgres://example_com:feqcv97siqxwu1@localhost:5432/example_com
+CACHE_URL=hiredis://localhost:6379/1/?key_prefix=example_com
+EMAIL_URL=submission://no-reply@example_com:8p7f%21Y%40do6@smtp.mailgun.com:587/
+"""
+            )
+
+            f.seek(0)
+
+            speckenv.read_speckenv(f.name, mapping=self.mapping)
+
+    def test_parse_database_url(self):
+        url = speckenv.env("DATABASE_URL", mapping=self.mapping)
+
+        self.assertEqual(
+            django_database_url(url),
+            {
+                "ENGINE": "django.db.backends.postgresql",
+                "NAME": "example_com",
+                "USER": "example_com",
+                "PASSWORD": "feqcv97siqxwu1",
+                "HOST": "localhost",
+                "PORT": "5432",
+            },
+        )
+
+    def test_parse_cache_url(self):
+        url = speckenv.env("CACHE_URL", mapping=self.mapping)
+
+        self.assertEqual(
+            django_cache_url(url),
+            {
+                "ENGINE": "django.core.cache.backends.redis.RedisCache",
+                "LOCATION": "redis://localhost:6379",
+                "KEY_PREFIX": "example_com",
+                "OPTIONS": {"db": "1"},
+            },
+        )
