@@ -24,7 +24,7 @@ def unquote(value):
 
 def django_database_url(s):
     parsed = parse.urlparse(s)
-    # qs = parse.parse_qs(parsed.query)
+    qs = parse.parse_qs(parsed.query)
 
     config = {
         "ENGINE": INTERESTING_DATABASE_BACKENDS.get(parsed.scheme, parsed.scheme),
@@ -34,6 +34,9 @@ def django_database_url(s):
         "HOST": unquote(parsed.hostname or ""),
         "PORT": str(parsed.port) if parsed.port else "",
     }
+
+    if conn_max_age := qs.get("conn_max_age"):
+        config["CONN_MAX_AGE"] = int(conn_max_age[0])
 
     return config
 

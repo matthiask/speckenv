@@ -133,6 +133,7 @@ AUTH_CACHE_URL=hiredis://user:pass@localhost:6379/1/?key_prefix=example_com
 EMAIL_URL=submission://no-reply@example_com:8p7f%21Y%40do6@smtp.mailgun.com:587/
 LOCAL_DATABASE_URL=postgres://localhost:5432/example_com
 QUOTED_DATABASE_URL=mysql://%23user:%23password@ec2.amazonaws.com:5431/%23database
+MAX_AGE_DATABASE_URL=postgres://localhost:5432/example_com?conn_max_age=10
 """
             )
 
@@ -182,6 +183,22 @@ QUOTED_DATABASE_URL=mysql://%23user:%23password@ec2.amazonaws.com:5431/%23databa
                 "PASSWORD": "#password",
                 "HOST": "ec2.amazonaws.com",
                 "PORT": "5431",
+            },
+        )
+
+    def test_parse_max_age_database_url(self):
+        url = speckenv.env("MAX_AGE_DATABASE_URL", mapping=self.mapping)
+
+        self.assertEqual(
+            django_database_url(url),
+            {
+                "ENGINE": "django.db.backends.postgresql",
+                "NAME": "example_com",
+                "USER": "",
+                "PASSWORD": "",
+                "HOST": "localhost",
+                "PORT": "5432",
+                "CONN_MAX_AGE": 10,
             },
         )
 
