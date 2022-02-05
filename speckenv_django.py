@@ -45,15 +45,18 @@ def django_cache_url(s):
     parsed = parse.urlparse(s)
     qs = parse.parse_qs(parsed.query)
 
+
+    options = {}
+    if db := parsed.path.strip("/"):
+        options["db"] = db
+
     config = {
+        # No need to set hiredis; redis-py automatically selects hiredis
+        # if it's available
         "BACKEND": INTERESTING_CACHE_BACKENDS.get(parsed.scheme, parsed.scheme),
         "LOCATION": f"redis://{parsed.netloc}",
         "KEY_PREFIX": qs["key_prefix"][0] if qs.get("key_prefix") else "",
-        "OPTIONS": {
-            # No need to set hiredis; redis-py automatically selects hiredis
-            # if it's available
-            "db": parsed.path.strip("/"),
-        },
+        "OPTIONS": options,
     }
 
     return config

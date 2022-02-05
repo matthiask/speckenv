@@ -95,6 +95,7 @@ class DjangoCacheURLTest(TestCase):
                 b"""
 CACHE_URL=hiredis://localhost:6379/1/?key_prefix=example_com
 AUTH_CACHE_URL=hiredis://user:pass@localhost:6379/1/?key_prefix=example_com
+NO_DB_CACHE_URL=redis://127.0.0.1:6379/?key_prefix=example_com
 """
             )
 
@@ -125,5 +126,18 @@ AUTH_CACHE_URL=hiredis://user:pass@localhost:6379/1/?key_prefix=example_com
                 "LOCATION": "redis://user:pass@localhost:6379",
                 "KEY_PREFIX": "example_com",
                 "OPTIONS": {"db": "1"},
+            },
+        )
+
+    def test_parse_no_db_cache_url(self):
+        url = speckenv.env("NO_DB_CACHE_URL", mapping=self.mapping)
+
+        self.assertEqual(
+            django_cache_url(url),
+            {
+                "BACKEND": "django.core.cache.backends.redis.RedisCache",
+                "LOCATION": "redis://127.0.0.1:6379",
+                "KEY_PREFIX": "example_com",
+                "OPTIONS": {},
             },
         )
