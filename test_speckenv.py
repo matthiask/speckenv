@@ -158,7 +158,7 @@ EMAIL_URL=submission://no-reply@example_com:8p7f%21Y%40do6@smtp.mailgun.com:587/
         self.assertEqual(
             django_cache_url(url),
             {
-                "ENGINE": "django.core.cache.backends.redis.RedisCache",
+                "BACKEND": "django.core.cache.backends.redis.RedisCache",
                 "LOCATION": "redis://localhost:6379",
                 "KEY_PREFIX": "example_com",
                 "OPTIONS": {"db": "1"},

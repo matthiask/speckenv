@@ -43,7 +43,7 @@ def django_cache_url(s):
     qs = parse.parse_qs(parsed.query)
 
     config = {
-        "ENGINE": INTERESTING_CACHE_BACKENDS.get(parsed.scheme, parsed.scheme),
+        "BACKEND": INTERESTING_CACHE_BACKENDS.get(parsed.scheme, parsed.scheme),
         "LOCATION": f"redis://{parsed.netloc}",
         "KEY_PREFIX": qs["key_prefix"][0] if qs.get("key_prefix") else "",
         "OPTIONS": {
