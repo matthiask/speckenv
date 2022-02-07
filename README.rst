@@ -79,6 +79,10 @@ variables. Many other projects exist which already do this but
 and not all of them. Also, the implementation doesn't (needlessly) add monkey
 patches to ``urllib.parse``.
 
+speckenv doesn't depend on Django, if you don't want to use Django or the
+``speckenv_django`` module you're not paying anything besides a few KiB on the
+harddisk.
+
 
 ``django_cache_url``
 ~~~~~~~~~~~~~~~~~~~~
