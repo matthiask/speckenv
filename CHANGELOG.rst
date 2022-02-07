@@ -7,6 +7,7 @@ Change log
 
 - Added more tests to ``speckenv_django``.
 - Introduced ``pre-commit`` to format all the things.
+- Added support for ``locmem://`` cache URLs.
 
 
 `3.0`_ (2022-02-05)

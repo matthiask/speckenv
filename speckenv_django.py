@@ -12,11 +12,6 @@ INTERESTING_DATABASE_BACKENDS = {
     "mysql": "django.db.backends.mysql",
 }
 
-INTERESTING_CACHE_BACKENDS = {
-    "redis": "django.core.cache.backends.redis.RedisCache",
-    "hiredis": "django.core.cache.backends.redis.RedisCache",
-}
-
 
 def unquote(value):
     return parse.unquote(value) if value else value
@@ -41,22 +36,36 @@ def django_database_url(s):
     return config
 
 
-def django_cache_url(s):
-    parsed = parse.urlparse(s)
-    qs = parse.parse_qs(parsed.query)
-
-
+def _redis_cache_url(parsed, qs):
     options = {}
     if db := parsed.path.strip("/"):
         options["db"] = db
 
-    config = {
+    return {
         # No need to set hiredis; redis-py automatically selects hiredis
         # if it's available
-        "BACKEND": INTERESTING_CACHE_BACKENDS.get(parsed.scheme, parsed.scheme),
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
         "LOCATION": f"redis://{parsed.netloc}",
         "KEY_PREFIX": qs["key_prefix"][0] if qs.get("key_prefix") else "",
         "OPTIONS": options,
     }
 
-    return config
+
+def _locmem_cache_url(parsed, qs):
+    return {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "KEY_PREFIX": qs["key_prefix"][0] if qs.get("key_prefix") else "",
+    }
+
+
+INTERESTING_CACHE_BACKENDS = {
+    "redis": _redis_cache_url,
+    "hiredis": _redis_cache_url,
+    "locmem": _locmem_cache_url,
+}
+
+
+def django_cache_url(s):
+    parsed = parse.urlparse(s)
+    qs = parse.parse_qs(parsed.query)
+    return INTERESTING_CACHE_BACKENDS[parsed.scheme](parsed, qs)

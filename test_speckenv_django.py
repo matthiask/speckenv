@@ -96,6 +96,7 @@ class DjangoCacheURLTest(TestCase):
 CACHE_URL=hiredis://localhost:6379/1/?key_prefix=example_com
 AUTH_CACHE_URL=hiredis://user:pass@localhost:6379/1/?key_prefix=example_com
 NO_DB_CACHE_URL=redis://127.0.0.1:6379/?key_prefix=example_com
+LOCMEM_URL=locmem://
 """
             )
 
@@ -139,5 +140,16 @@ NO_DB_CACHE_URL=redis://127.0.0.1:6379/?key_prefix=example_com
                 "LOCATION": "redis://127.0.0.1:6379",
                 "KEY_PREFIX": "example_com",
                 "OPTIONS": {},
+            },
+        )
+
+    def test_parse_locmem_url(self):
+        url = speckenv.env("LOCMEM_URL", mapping=self.mapping)
+
+        self.assertEqual(
+            django_cache_url(url),
+            {
+                "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+                "KEY_PREFIX": "",
             },
         )
