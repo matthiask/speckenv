@@ -7,6 +7,8 @@ Change log
 
 .. _Next version: https://github.com/matthiask/speckenv/compare/3.1...main
 
+- Added support for ``dummy://`` cache URLs.
+
 
 `3.1`_ (2022-02-07)
 ~~~~~~~~~~~~~~~~~~~

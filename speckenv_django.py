@@ -54,6 +54,7 @@ def _redis_cache_url(parsed, qs):
 def _locmem_cache_url(parsed, qs):
     return {
         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": parsed.netloc,
         "KEY_PREFIX": qs["key_prefix"][0] if qs.get("key_prefix") else "",
     }
 
@@ -62,6 +63,7 @@ INTERESTING_CACHE_BACKENDS = {
     "redis": _redis_cache_url,
     "hiredis": _redis_cache_url,
     "locmem": _locmem_cache_url,
+    "dummy": lambda *a: {"BACKEND": "django.core.cache.backends.dummy.DummyCache"},
 }
 
 

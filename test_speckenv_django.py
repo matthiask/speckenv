@@ -97,6 +97,7 @@ CACHE_URL=hiredis://localhost:6379/1/?key_prefix=example_com
 AUTH_CACHE_URL=hiredis://user:pass@localhost:6379/1/?key_prefix=example_com
 NO_DB_CACHE_URL=redis://127.0.0.1:6379/?key_prefix=example_com
 LOCMEM_URL=locmem://
+LOCATION_LOCMEM_URL=locmem://snowflake?key_prefix=stuff
 """
             )
 
@@ -150,6 +151,27 @@ LOCMEM_URL=locmem://
             django_cache_url(url),
             {
                 "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+                "LOCATION": "",
                 "KEY_PREFIX": "",
+            },
+        )
+
+    def test_parse_location_locmem_url(self):
+        url = speckenv.env("LOCATION_LOCMEM_URL", mapping=self.mapping)
+
+        self.assertEqual(
+            django_cache_url(url),
+            {
+                "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+                "LOCATION": "snowflake",
+                "KEY_PREFIX": "stuff",
+            },
+        )
+
+    def test_parse_dummy_url(self):
+        self.assertEqual(
+            django_cache_url("dummy://"),
+            {
+                "BACKEND": "django.core.cache.backends.dummy.DummyCache",
             },
         )
