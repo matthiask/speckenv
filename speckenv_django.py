@@ -1,7 +1,11 @@
 from urllib import parse
 
 
-__all__ = ["django_database_url", "django_cache_url"]
+__all__ = [
+    "django_cache_url",
+    "django_database_url",
+    "django_email_url",
+]
 
 
 INTERESTING_DATABASE_BACKENDS = {
