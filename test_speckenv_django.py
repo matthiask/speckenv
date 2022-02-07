@@ -1,32 +1,14 @@
-import tempfile
 from unittest import TestCase
 
-import speckenv
 from speckenv_django import django_cache_url, django_database_url
 
 
-class DjangoDatabaseURLTest(TestCase):
-    def setUp(self):
-        self.mapping = {}
-
-        with tempfile.NamedTemporaryFile() as f:
-            f.write(
-                b"""
-DATABASE_URL=postgres://example_com:feqcv97siqxwu1@localhost:5432/example_com
-LOCAL_DATABASE_URL=postgres://localhost:5432/example_com
-QUOTED_DATABASE_URL=mysql://%23user:%23password@ec2.amazonaws.com:5431/%23database
-MAX_AGE_DATABASE_URL=postgres://localhost:5432/example_com?conn_max_age=10
 # EMAIL_URL=submission://no-reply@example_com:8p7f%21Y%40do6@smtp.mailgun.com:587/
-"""
-            )
 
-            f.seek(0)
 
-            speckenv.read_speckenv(f.name, mapping=self.mapping)
-
+class DjangoDatabaseURLTest(TestCase):
     def test_parse_database_url(self):
-        url = speckenv.env("DATABASE_URL", mapping=self.mapping)
-
+        url = "postgres://example_com:feqcv97siqxwu1@localhost:5432/example_com"
         self.assertEqual(
             django_database_url(url),
             {
@@ -40,8 +22,7 @@ MAX_AGE_DATABASE_URL=postgres://localhost:5432/example_com?conn_max_age=10
         )
 
     def test_parse_local_database_url(self):
-        url = speckenv.env("LOCAL_DATABASE_URL", mapping=self.mapping)
-
+        url = "postgres://localhost:5432/example_com"
         self.assertEqual(
             django_database_url(url),
             {
@@ -55,8 +36,7 @@ MAX_AGE_DATABASE_URL=postgres://localhost:5432/example_com?conn_max_age=10
         )
 
     def test_parse_quoted_database_url(self):
-        url = speckenv.env("QUOTED_DATABASE_URL", mapping=self.mapping)
-
+        url = "mysql://%23user:%23password@ec2.amazonaws.com:5431/%23database"
         self.assertEqual(
             django_database_url(url),
             {
@@ -70,8 +50,7 @@ MAX_AGE_DATABASE_URL=postgres://localhost:5432/example_com?conn_max_age=10
         )
 
     def test_parse_max_age_database_url(self):
-        url = speckenv.env("MAX_AGE_DATABASE_URL", mapping=self.mapping)
-
+        url = "postgres://localhost:5432/example_com?conn_max_age=10"
         self.assertEqual(
             django_database_url(url),
             {
@@ -87,27 +66,8 @@ MAX_AGE_DATABASE_URL=postgres://localhost:5432/example_com?conn_max_age=10
 
 
 class DjangoCacheURLTest(TestCase):
-    def setUp(self):
-        self.mapping = {}
-
-        with tempfile.NamedTemporaryFile() as f:
-            f.write(
-                b"""
-CACHE_URL=hiredis://localhost:6379/1/?key_prefix=example_com
-AUTH_CACHE_URL=hiredis://user:pass@localhost:6379/1/?key_prefix=example_com
-NO_DB_CACHE_URL=redis://127.0.0.1:6379/?key_prefix=example_com
-LOCMEM_URL=locmem://
-LOCATION_LOCMEM_URL=locmem://snowflake?key_prefix=stuff
-"""
-            )
-
-            f.seek(0)
-
-            speckenv.read_speckenv(f.name, mapping=self.mapping)
-
     def test_parse_cache_url(self):
-        url = speckenv.env("CACHE_URL", mapping=self.mapping)
-
+        url = "hiredis://localhost:6379/1/?key_prefix=example_com"
         self.assertEqual(
             django_cache_url(url),
             {
@@ -119,8 +79,7 @@ LOCATION_LOCMEM_URL=locmem://snowflake?key_prefix=stuff
         )
 
     def test_parse_auth_cache_url(self):
-        url = speckenv.env("AUTH_CACHE_URL", mapping=self.mapping)
-
+        url = "hiredis://user:pass@localhost:6379/1/?key_prefix=example_com"
         self.assertEqual(
             django_cache_url(url),
             {
@@ -132,8 +91,7 @@ LOCATION_LOCMEM_URL=locmem://snowflake?key_prefix=stuff
         )
 
     def test_parse_no_db_cache_url(self):
-        url = speckenv.env("NO_DB_CACHE_URL", mapping=self.mapping)
-
+        url = "redis://127.0.0.1:6379/?key_prefix=example_com"
         self.assertEqual(
             django_cache_url(url),
             {
@@ -145,10 +103,8 @@ LOCATION_LOCMEM_URL=locmem://snowflake?key_prefix=stuff
         )
 
     def test_parse_locmem_url(self):
-        url = speckenv.env("LOCMEM_URL", mapping=self.mapping)
-
         self.assertEqual(
-            django_cache_url(url),
+            django_cache_url("locmem://"),
             {
                 "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
                 "LOCATION": "",
@@ -157,10 +113,8 @@ LOCATION_LOCMEM_URL=locmem://snowflake?key_prefix=stuff
         )
 
     def test_parse_location_locmem_url(self):
-        url = speckenv.env("LOCATION_LOCMEM_URL", mapping=self.mapping)
-
         self.assertEqual(
-            django_cache_url(url),
+            django_cache_url("locmem://snowflake?key_prefix=stuff"),
             {
                 "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
                 "LOCATION": "snowflake",
