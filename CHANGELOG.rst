@@ -5,7 +5,12 @@ Change log
 `Next version`_
 ~~~~~~~~~~~~~~~
 
-.. _Next version: https://github.com/matthiask/speckenv/compare/3.1...main
+.. _Next version: https://github.com/matthiask/speckenv/compare/3.2...main
+
+`3.2`_ (2022-02-07)
+~~~~~~~~~~~~~~~~~~~
+
+.. _3.2: https://github.com/matthiask/speckenv/compare/3.1...3.2
 
 - Added support for ``dummy://`` cache URLs.
 - Added support for parsing email URLs.
