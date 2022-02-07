@@ -67,3 +67,7 @@ class DjangoCacheURLTest(TestCase):
                 "BACKEND": "django.core.cache.backends.dummy.DummyCache",
             },
         )
+
+    def test_parse_unknown(self):
+        with self.assertRaises(KeyError):
+            django_cache_url("unknown://")

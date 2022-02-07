@@ -3,9 +3,6 @@ from unittest import TestCase
 from speckenv_django import django_database_url
 
 
-# EMAIL_URL=submission://no-reply@example_com:8p7f%21Y%40do6@smtp.mailgun.com:587/
-
-
 class DjangoDatabaseURLTest(TestCase):
     def test_parse_database_url(self):
         url = "postgres://example_com:feqcv97siqxwu1@localhost:5432/example_com"
@@ -63,3 +60,7 @@ class DjangoDatabaseURLTest(TestCase):
                 "CONN_MAX_AGE": 10,
             },
         )
+
+    def test_parse_unknown(self):
+        with self.assertRaises(KeyError):
+            django_database_url("unknown://")

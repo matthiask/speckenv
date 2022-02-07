@@ -22,7 +22,7 @@ def django_database_url(s, /):
     qs = parse.parse_qs(url.query)
 
     config = {
-        "ENGINE": INTERESTING_DATABASE_BACKENDS.get(url.scheme, url.scheme),
+        "ENGINE": INTERESTING_DATABASE_BACKENDS[url.scheme],
         "NAME": _unquote(url.path.strip("/")),
         "USER": _unquote(url.username or ""),
         "PASSWORD": _unquote(url.password or ""),
@@ -71,3 +71,51 @@ def django_cache_url(s, /):
     url = parse.urlparse(s)
     qs = parse.parse_qs(url.query)
     return INTERESTING_CACHE_BACKENDS[url.scheme](url, qs)
+
+
+INTERESTING_MAIL_BACKENDS = {
+    "smtp": "django.core.mail.backends.smtp.EmailBackend",
+    "submission": "django.core.mail.backends.smtp.EmailBackend",
+    "locmem": "django.core.mail.backends.locmem.EmailBackend",
+    "console": "django.core.mail.backends.console.EmailBackend",
+    "dummy": "django.core.mail.backends.dummy.EmailBackend",
+}
+
+
+def _setif(dict, key, value):
+    if not dict.get(key):
+        dict[key] = value
+
+
+def django_email_url(s, /):
+    url = parse.urlparse(s)
+    qs = parse.parse_qs(url.query)
+
+    config = {
+        "EMAIL_BACKEND": INTERESTING_MAIL_BACKENDS[url.scheme],
+        "EMAIL_HOST_USER": _unquote(url.username or ""),
+        "EMAIL_HOST_PASSWORD": _unquote(url.password or ""),
+        "EMAIL_HOST": url.hostname,
+        "EMAIL_PORT": url.port,
+        "EMAIL_TIMEOUT": None,
+        "EMAIL_USE_SSL": False,
+        "EMAIL_USE_TLS": False,
+    }
+
+    if url.scheme == "smtp":
+        _setif(config, "EMAIL_HOST", "localhost")
+        _setif(config, "EMAIL_PORT", 25)
+    if url.scheme == "submission":
+        config["EMAIL_USE_TLS"] = True
+        _setif(config, "EMAIL_PORT", 587)
+    if "ssl" in qs:
+        config["EMAIL_USE_SSL"] = True
+        config["EMAIL_USE_TLS"] = False
+    if "tls" in qs:
+        config["EMAIL_USE_SSL"] = False
+        config["EMAIL_USE_TLS"] = True
+    if "timeout" in qs:
+        config["EMAIL_TIMEOUT"] = int(qs["timeout"][0])
+    if "_default_from_email" in qs:
+        config["DEFAULT_FROM_EMAIL"] = qs["_default_from_email"][0]
+    return config
