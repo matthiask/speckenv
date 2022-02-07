@@ -74,10 +74,12 @@ Django support
 ==============
 
 speckenv comes with a few utilities for configuring Django using environment
-variables. Many other projects exist which already do this but
-``speckenv_django`` is different in that it only covers interesting settings
-and not all of them. Also, the implementation doesn't (needlessly) add monkey
-patches to ``urllib.parse``.
+variables. These are all pure functions without any side effects and no
+dependency on their environment.
+
+Many other projects exist which already do this but ``speckenv_django`` is
+different in that it only covers interesting settings. Also, the implementation
+doesn't add monkey patches to ``urllib.parse``.
 
 speckenv doesn't depend on Django, if you don't want to use Django or the
 ``speckenv_django`` module you're not paying anything besides a few KiB on the
