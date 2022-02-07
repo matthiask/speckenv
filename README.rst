@@ -68,3 +68,70 @@ easily possible by overriding the default mapping argument:
     mapping = {}
     read_speckenv("file_with_variables.env", mapping=mapping)
     setting1 = env("SETTING1", mapping=mapping)
+
+
+Django support
+==============
+
+speckenv comes with a few utilities for configuring Django using environment
+variables. Many other projects exist which already do this but
+``speckenv_django`` is different in that it only covers interesting settings
+and not all of them. Also, the implementation doesn't (needlessly) add monkey
+patches to ``urllib.parse``.
+
+
+``django_cache_url``
+~~~~~~~~~~~~~~~~~~~~
+
+Covers configuring a Redis, locmem or dummy cache backend with optional
+authentication credentials. The Redis configuration only supports Django 4 or
+better. ``redis://`` and ``hiredis://`` are equivalent since recent enough
+versions of redis-py automatically select the hiredis parser if it is
+available.
+
+.. code-block:: python
+
+    from speckenv import env
+    from speckenv_django import django_cache_url
+
+    # CACHE_URL=hiredis://localhost:6379/1/?key_prefix=example_com"
+    CACHES = {"default": django_cache_url(env("DATABASE_URL", default="locmem://"))}
+    # NOTE! locmem:// may be a bad default, but that's up to you really.
+
+
+``django_database_url``
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Covers configuring a PostgreSQL, PostGIS or sqlite database engine with
+authentication credentials.
+
+.. code-block:: python
+
+    from speckenv import env
+    from speckenv_django import django_database_url
+
+    # DATABASE_URL=postgres://localhost:5432/example_com
+    DATABASES = {"default": django_database_url(env("DATABASE_URL", required=True))}
+
+
+``django_email_url``
+~~~~~~~~~~~~~~~~~~~~
+
+Covers configuring an email backend. Known backends are ``smtp://``,
+``submission://`` (same as ``smtp://`` but with TLS and a default port of 587),
+``locmem://``, ``console://`` and ``dummy:``.
+
+The utility also supports explicitly requesting SSL (``?ssl=true``), TLS
+(``?tls=true``), SMTP timeouts (``?timeout=10``) and setting a
+``DEFAULT_FROM_EMAIL`` address (``?_default_from_email=info@example.com``)
+
+.. code-block:: python
+
+    from speckenv import env
+    from speckenv_django import django_email_url
+
+    # DATABASE_URL=smtp://
+    if DEBUG:
+        globals().update(django_email_url(env("EMAIL_URL", default="console://")))
+    else:
+        globals().update(django_email_url(env("EMAIL_URL", default="smtp://")))
