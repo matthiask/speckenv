@@ -17,7 +17,7 @@ def _unquote(value):
     return parse.unquote(value) if value else value
 
 
-def django_database_url(s):
+def django_database_url(s, /):
     url = parse.urlparse(s)
     qs = parse.parse_qs(url.query)
 
@@ -67,7 +67,7 @@ INTERESTING_CACHE_BACKENDS = {
 }
 
 
-def django_cache_url(s):
+def django_cache_url(s, /):
     url = parse.urlparse(s)
     qs = parse.parse_qs(url.query)
     return INTERESTING_CACHE_BACKENDS[url.scheme](url, qs)
