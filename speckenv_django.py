@@ -13,21 +13,21 @@ INTERESTING_DATABASE_BACKENDS = {
 }
 
 
-def unquote(value):
+def _unquote(value):
     return parse.unquote(value) if value else value
 
 
 def django_database_url(s):
-    parsed = parse.urlparse(s)
-    qs = parse.parse_qs(parsed.query)
+    url = parse.urlparse(s)
+    qs = parse.parse_qs(url.query)
 
     config = {
-        "ENGINE": INTERESTING_DATABASE_BACKENDS.get(parsed.scheme, parsed.scheme),
-        "NAME": unquote(parsed.path.strip("/")),
-        "USER": unquote(parsed.username or ""),
-        "PASSWORD": unquote(parsed.password or ""),
-        "HOST": unquote(parsed.hostname or ""),
-        "PORT": str(parsed.port) if parsed.port else "",
+        "ENGINE": INTERESTING_DATABASE_BACKENDS.get(url.scheme, url.scheme),
+        "NAME": _unquote(url.path.strip("/")),
+        "USER": _unquote(url.username or ""),
+        "PASSWORD": _unquote(url.password or ""),
+        "HOST": _unquote(url.hostname or ""),
+        "PORT": str(url.port) if url.port else "",
     }
 
     if conn_max_age := qs.get("conn_max_age"):
@@ -36,25 +36,25 @@ def django_database_url(s):
     return config
 
 
-def _redis_cache_url(parsed, qs):
+def _redis_cache_url(url, qs):
     options = {}
-    if db := parsed.path.strip("/"):
+    if db := url.path.strip("/"):
         options["db"] = db
 
     return {
         # No need to set hiredis; redis-py automatically selects hiredis
         # if it's available
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": f"redis://{parsed.netloc}",
+        "LOCATION": f"redis://{url.netloc}",
         "KEY_PREFIX": qs["key_prefix"][0] if qs.get("key_prefix") else "",
         "OPTIONS": options,
     }
 
 
-def _locmem_cache_url(parsed, qs):
+def _locmem_cache_url(url, qs):
     return {
         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-        "LOCATION": parsed.netloc,
+        "LOCATION": url.netloc,
         "KEY_PREFIX": qs["key_prefix"][0] if qs.get("key_prefix") else "",
     }
 
@@ -68,6 +68,6 @@ INTERESTING_CACHE_BACKENDS = {
 
 
 def django_cache_url(s):
-    parsed = parse.urlparse(s)
-    qs = parse.parse_qs(parsed.query)
-    return INTERESTING_CACHE_BACKENDS[parsed.scheme](parsed, qs)
+    url = parse.urlparse(s)
+    qs = parse.parse_qs(url.query)
+    return INTERESTING_CACHE_BACKENDS[url.scheme](url, qs)
