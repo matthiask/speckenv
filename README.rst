@@ -101,7 +101,7 @@ available.
     from speckenv_django import django_cache_url
 
     # CACHE_URL=hiredis://localhost:6379/1/?key_prefix=example_com"
-    CACHES = {"default": django_cache_url(env("DATABASE_URL", default="locmem://"))}
+    CACHES = {"default": django_cache_url(env("CACHE_URL", default="locmem://"))}
     # NOTE! locmem:// may be a bad default, but that's up to you really.
 
 
