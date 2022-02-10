@@ -117,4 +117,6 @@ def django_email_url(s, /):
         config["EMAIL_TIMEOUT"] = int(qs["timeout"][0])
     if "_default_from_email" in qs:
         config["DEFAULT_FROM_EMAIL"] = qs["_default_from_email"][0]
+    if "_server_email" in qs:
+        config["SERVER_EMAIL"] = qs["_server_email"][0]
     return config

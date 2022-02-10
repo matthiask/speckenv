@@ -46,6 +46,11 @@ class DjangoEmailURLTest(TestCase):
         config = django_email_url("smtp://?_default_from_email=info@example.com")
         self.assertEqual(config["DEFAULT_FROM_EMAIL"], "info@example.com")
 
+    def test_parse_server_email(self):
+        self.assertNotIn("SERVER_EMAIL", django_email_url("smtp://"))
+        config = django_email_url("smtp://?_server_email=info@example.com")
+        self.assertEqual(config["SERVER_EMAIL"], "info@example.com")
+
     def test_parse_ssl(self):
         config = django_email_url("smtp:///?ssl=yes")
         self.assertTrue(config["EMAIL_USE_SSL"])
