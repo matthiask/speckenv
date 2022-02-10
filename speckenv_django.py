@@ -86,11 +86,6 @@ INTERESTING_MAIL_BACKENDS = {
 }
 
 
-def _setif(dict, key, value):
-    if not dict.get(key):
-        dict[key] = value
-
-
 def django_email_url(s, /):
     url = parse.urlparse(s)
     qs = parse.parse_qs(url.query)
@@ -107,11 +102,11 @@ def django_email_url(s, /):
     }
 
     if url.scheme == "smtp":
-        _setif(config, "EMAIL_HOST", "localhost")
-        _setif(config, "EMAIL_PORT", 25)
+        config["EMAIL_HOST"] = url.hostname or "localhost"
+        config["EMAIL_PORT"] = url.port or 25
     if url.scheme == "submission":
         config["EMAIL_USE_TLS"] = True
-        _setif(config, "EMAIL_PORT", 587)
+        config["EMAIL_PORT"] = url.port or 587
     if "ssl" in qs:
         config["EMAIL_USE_SSL"] = True
         config["EMAIL_USE_TLS"] = False
