@@ -7,6 +7,9 @@ speckenv because a speck is a synonym for a dot and because Speck is awesome.
 Usage
 =====
 
+Basic
+~~~~~
+
 Read the settings contained in ``./.env`` into ``os.environ``:
 
 .. code-block:: python
@@ -31,7 +34,7 @@ Read individual values:
     # Standard usage:
     SETTING1 = env("SETTING1")
 
-    # Fallback, if SETTING2 is not set (truthyness doesn't matter):
+    # Fallback if SETTING2 does not exist:
     SETTING2 = env("SETTING2", default="bla")
 
     # Fail hard if missing:
@@ -39,9 +42,14 @@ Read individual values:
 
     # Coerce the value before returning it (coercion is also applied to
     # default values):
-    SETTING4 = env("SETTING4", coerce=bool)
+    SETTING4 = env(
+        "SETTING4",
+        coerce=lambda value: date(*(int(part) for part in value.split("-"))),
+        default="1970-01-01",
+    )
 
-The following values are evaluated as Python literals::
+The following values are evaluated as Python literals, therefore coercing
+values may be useful less often than you might think::
 
     BOOL=True  # And False, None etc.
     NUMBER=42
@@ -54,9 +62,8 @@ lines starting with a ``#`` are ignored::
     # COMMENTED_OUT=VALUE
     THIS = WORKS
 
-**NOTE!** You should treat everything except for the first argument to
-both ``env`` and ``read_speckenv`` as keyword-only. Since speckenv still
-supports Python 2 this isn't enforced by the code right now.
+Custom mapping instead of ``os.environ``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 It may be useful to use a mapping separate from ``os.environ``. This is
 easily possible by overriding the default mapping argument:
