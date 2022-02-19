@@ -82,7 +82,8 @@ Django support
 
 speckenv comes with a few utilities for configuring Django using environment
 variables. These are all pure functions without any side effects and no
-dependency on their environment.
+dependency on their environment. They are only bundled with ``speckenv``
+because they are useful and because it's convenient to do so.
 
 Many other projects exist which already do this but ``speckenv_django`` is
 different in that it only covers interesting settings. Also, the implementation
