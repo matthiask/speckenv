@@ -5,8 +5,13 @@ Change log
 `Next version`_
 ~~~~~~~~~~~~~~~
 
-.. _Next version: https://github.com/matthiask/speckenv/compare/3.2...main
+.. _Next version: https://github.com/matthiask/speckenv/compare/3.3...main
 
+
+`3.3`_ (2022-03-19)
+~~~~~~~~~~~~~~~~~~~
+
+.. _3.3: https://github.com/matthiask/speckenv/compare/3.2...3.3
 - Added ``django_email_url`` to the module's ``__all__`` list.
 - Documented the methods of the ``speckenv_django`` module.
 - Added support for the ``_server_email`` query parameter for email URLs.
