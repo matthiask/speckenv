@@ -20,13 +20,13 @@ class DjangoEmailURLTest(TestCase):
         )
 
     def test_parse_submission(self):
-        url = "submission://no-reply@example_com:8p7f%21Y%40do6@smtp.mailgun.com:587/"
+        url = "submission://no-reply@example_com:8p7f%21Y%40do6%25%28%29@smtp.mailgun.com:587/"
         self.assertEqual(
             django_email_url(url),
             {
                 "EMAIL_BACKEND": "django.core.mail.backends.smtp.EmailBackend",
                 "EMAIL_HOST": "smtp.mailgun.com",
-                "EMAIL_HOST_PASSWORD": "8p7f!Y@do6",
+                "EMAIL_HOST_PASSWORD": "8p7f!Y@do6%()",
                 "EMAIL_HOST_USER": "no-reply@example_com",
                 "EMAIL_PORT": 587,
                 "EMAIL_TIMEOUT": None,
