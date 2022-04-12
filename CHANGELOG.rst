@@ -7,6 +7,11 @@ Change log
 
 .. _Next version: https://github.com/matthiask/speckenv/compare/3.3...main
 
+- Added a ``speckenv_django_patch`` module to add bad knock offs of a few
+  12factor apps to ``sys.modules``.
+- Changed the exception type to ``KeyError`` when a required environment
+  variable is missing.
+
 
 `3.3`_ (2022-03-19)
 ~~~~~~~~~~~~~~~~~~~
