@@ -1,5 +1,6 @@
 import os
 import sys
+import warnings
 from unittest import TestCase
 
 from speckenv_django_patch import (
@@ -33,7 +34,11 @@ class DjangoPatchTest(TestCase):
         )
 
         os.environ.pop("EMAIL_URL", None)
-        cfg = sys.modules["dj_email_url"].config()
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            with self.assertWarnsRegex(Warning, r"Key 'EMAIL_URL' not available"):
+                cfg = sys.modules["dj_email_url"].config()
+
         self.assertEqual(
             cfg["EMAIL_BACKEND"],
             "django.core.mail.backends.smtp.EmailBackend",
