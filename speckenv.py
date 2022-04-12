@@ -64,7 +64,7 @@ def env(
         return coerce(value)
     except KeyError:
         if required:
-            raise Exception("Required key '%s' not available in environment" % key)
+            raise
         if warn:
             warnings.warn("Key '%s' not available in environment" % key, stacklevel=2)
         return coerce(default)
