@@ -62,6 +62,20 @@ lines starting with a ``#`` are ignored::
     # COMMENTED_OUT=VALUE
     THIS = WORKS
 
+You shouldn't use comments in lines though. They sometimes work by accident but
+it's a bad idea.
+
+If a value looks like a Python type but you want to load it as a string you
+have to use coercion, e.g.
+
+.. code-block:: python
+
+   NUMBER_AS_STRING = env("NUMBER", coerce=str)
+
+   # Alternatively, read the value directly from os.environ:
+   NUMBER_AS_STRING = os.environ["NUMBER"]
+
+
 Custom mapping instead of ``os.environ``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
