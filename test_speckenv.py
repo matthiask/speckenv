@@ -1,7 +1,7 @@
 import os
 import tempfile
 import warnings
-from unittest import TestCase, expectedFailure
+from unittest import TestCase
 
 import speckenv
 
@@ -54,11 +54,8 @@ NO_EQUAL_SIGN
 
         self.assertNotIn("NO_EQUAL_SIGN", os.environ)
 
-    @expectedFailure
-    def test_inline_comment_str(self):
-        self.assertEqual(speckenv.env("COMMENT_STR"), "value")
-
     def test_inline_comment_str_quoted(self):
+        """Line looks like it has a comment, but we cannot be sure."""
         self.assertEqual(speckenv.env("COMMENT_STR_QUOTED"), "value  # TEST")
 
     def test_inline_comment_int(self):
