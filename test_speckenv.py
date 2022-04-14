@@ -62,6 +62,9 @@ NO_EQUAL_SIGN
         # Works because ast.literal_eval also knows how to handle comments...
         self.assertEqual(speckenv.env("COMMENT_INT"), 42)
 
+    def test_int_as_string(self):
+        self.assertEqual(speckenv.env("COMMENT_INT", coerce=str), "42")
+
 
 class CustomMappingTestCase(TestCase):
     def test_custom_mapping(self):
