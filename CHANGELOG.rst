@@ -5,7 +5,13 @@ Change log
 `Next version`_
 ~~~~~~~~~~~~~~~
 
-.. _Next version: https://github.com/matthiask/speckenv/compare/3.3...main
+.. _Next version: https://github.com/matthiask/speckenv/compare/3.4...main
+
+
+`3.4`_ (2022-08-18)
+~~~~~~~~~~~~~~~~~~~
+
+.. _3.4: https://github.com/matthiask/speckenv/compare/3.3...3.4
 
 - Added a ``speckenv_django_patch`` module to add bad knock offs of a few
   12factor apps to ``sys.modules``.
@@ -19,6 +25,7 @@ Change log
 ~~~~~~~~~~~~~~~~~~~
 
 .. _3.3: https://github.com/matthiask/speckenv/compare/3.2...3.3
+
 - Added ``django_email_url`` to the module's ``__all__`` list.
 - Documented the methods of the ``speckenv_django`` module.
 - Added support for the ``_server_email`` query parameter for email URLs.
