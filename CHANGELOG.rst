@@ -11,6 +11,8 @@ Change log
   12factor apps to ``sys.modules``.
 - Changed the exception type to ``KeyError`` when a required environment
   variable is missing.
+- Allowed passing a warning message which is shown to the user to the ``env()``
+  function, not just ``True``.
 
 
 `3.3`_ (2022-03-19)

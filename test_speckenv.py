@@ -114,3 +114,13 @@ class WarningsTestCase(TestCase):
 
             self.assertEqual(len(w), 1)
             self.assertIn("Key 'NOT' not available in environment", f"{w[0].message}")
+
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+
+            speckenv.env("NOT", mapping=mapping, warn="Additional message.")
+            self.assertEqual(len(w), 1)
+            self.assertIn(
+                "Key 'NOT' not available in environment (Additional message.)",
+                f"{w[0].message}",
+            )

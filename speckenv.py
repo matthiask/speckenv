@@ -3,7 +3,7 @@
 import ast
 import os
 import warnings
-from typing import Any, Callable, MutableMapping, TypeVar
+from typing import Any, Callable, MutableMapping, TypeVar, Union
 
 
 T = TypeVar("T")
@@ -26,7 +26,7 @@ def read_speckenv(
     """
     path = os.path.join(os.getcwd(), filename)
     if not os.path.isfile(path):
-        warnings.warn("%s not a file, not reading anything" % filename, stacklevel=2)
+        warnings.warn(f"{filename} not a file, not reading anything", stacklevel=2)
         return
     # Not sure whether we should try handling other encodings than ASCII
     # at all...
@@ -50,7 +50,7 @@ def env(
     required: bool = False,
     mapping: MutableMapping[str, str] = os.environ,
     coerce: Callable[[Any], Any] = identity,
-    warn: bool = False,
+    warn: Union[bool, str] = False,
 ) -> T:
     """
     An easier way to read values from the environment (or from a different
@@ -65,6 +65,11 @@ def env(
     except KeyError:
         if required:
             raise
-        if warn:
-            warnings.warn("Key '%s' not available in environment" % key, stacklevel=2)
+        if warn is True:
+            warnings.warn(f"Key '{key}' not available in environment", stacklevel=2)
+        elif warn:
+            warnings.warn(
+                f"Key '{key}' not available in environment ({warn})",
+                stacklevel=2,
+            )
         return coerce(default)
