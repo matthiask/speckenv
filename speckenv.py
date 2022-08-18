@@ -2,6 +2,7 @@
 
 import ast
 import os
+import sys
 import warnings
 from typing import Any, Callable, MutableMapping, TypeVar, Union
 
@@ -63,8 +64,6 @@ def env(
     except (SyntaxError, ValueError):
         return coerce(value)
     except KeyError:
-        if required:
-            raise
         if warn is True:
             warnings.warn(f"Key '{key}' not available in environment", stacklevel=2)
         elif warn:
@@ -72,4 +71,6 @@ def env(
                 f"Key '{key}' not available in environment ({warn})",
                 stacklevel=2,
             )
+        if required:
+            sys.exit(f"Exiting: Required key '{key}' missing")
         return coerce(default)

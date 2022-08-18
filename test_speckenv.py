@@ -44,7 +44,7 @@ NO_EQUAL_SIGN
         # Not defined values
         self.assertEqual(speckenv.env("UNDEFINED"), None)
         self.assertIs(speckenv.env("UNDEFINED", coerce=bool), False)
-        self.assertRaises(Exception, speckenv.env, "UNDEFINED", required=True)
+        self.assertRaises(SystemExit, speckenv.env, "UNDEFINED", required=True)
 
         # Defaults
         self.assertEqual(speckenv.env("DEFAULT"), None)

@@ -7,6 +7,12 @@ Change log
 
 .. _Next version: https://github.com/matthiask/speckenv/compare/3.4...main
 
+- Allowed warning on missing required keys.
+- Changed the code to use ``sys.exit`` with a custom message when encountering
+  missing required keys instead of re-raising the exception. You should not use
+  ``required=True`` with values which aren't really required (use a sentinel
+  value as a default instead for this uncommon use case).
+
 
 `3.4`_ (2022-08-18)
 ~~~~~~~~~~~~~~~~~~~

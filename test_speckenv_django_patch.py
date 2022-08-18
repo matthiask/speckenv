@@ -23,7 +23,7 @@ class DjangoPatchTest(TestCase):
         self.assertIs(sys.modules["dj_email_url"], modules["dj_email_url"])
 
         os.environ.pop("DATABASE_URL", None)
-        with self.assertRaises(KeyError):
+        with self.assertRaises(SystemExit):
             sys.modules["dj_database_url"].config()
 
         os.environ["CACHE_URL"] = "locmem://"
