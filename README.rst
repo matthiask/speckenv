@@ -163,3 +163,20 @@ The utility also supports explicitly requesting SSL (``?ssl=true``), TLS
         globals().update(django_email_url(env("EMAIL_URL", default="console://")))
     else:
         globals().update(django_email_url(env("EMAIL_URL", default="smtp://")))
+
+
+Automatically substituting other 12factor libraries
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+speckenv ships a Python module which inserts Python modules named
+``dj_database_url``, ``django_cache_url`` and ``dj_email_url`` into
+``sys.modules`` (if they do not exist already) which contain basic functions
+calling the functions mentioned above. This module is almost guaranteed to NOT
+work in an arbitrary environment but it may be useful as a quick solution if
+you do want to change the settings module as little as possible when upgrading
+your code to Django 4.0 and are already using speckenv. To use it you should
+insert the following line at the top of your settings module:
+
+.. code-block:: python
+
+    import speckenv_django_patch  # noqa isort:skip
