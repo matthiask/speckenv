@@ -5,7 +5,13 @@ Change log
 `Next version`_
 ~~~~~~~~~~~~~~~
 
-.. _Next version: https://github.com/matthiask/speckenv/compare/3.4...main
+.. _Next version: https://github.com/matthiask/speckenv/compare/4.0...main
+
+
+`4.0`_ (2022-08-18)
+~~~~~~~~~~~~~~~~~~~
+
+.. _3.4: https://github.com/matthiask/speckenv/compare/3.3...3.4
 
 - Allowed warning on missing required keys.
 - Changed the code to use ``sys.exit`` with a custom message when encountering
