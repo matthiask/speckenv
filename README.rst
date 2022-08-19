@@ -150,8 +150,11 @@ Covers configuring an email backend. Known backends are ``smtp://``,
 ``locmem://``, ``console://`` and ``dummy:``.
 
 The utility also supports explicitly requesting SSL (``?ssl=true``), TLS
-(``?tls=true``), SMTP timeouts (``?timeout=10``) and setting a
-``DEFAULT_FROM_EMAIL`` address (``?_default_from_email=info@example.com``)
+(``?tls=true``), SMTP timeouts (``?timeout=10``), setting a
+``DEFAULT_FROM_EMAIL`` address (``?_default_from_email=info@example.com``) and
+setting a ``SERVER_EMAIL`` address (``?_server_email=info@example.com``). Note
+that since Django uses individual variables instead of a dictionary you have to
+pass the return value to ``globals().update()``.
 
 .. code-block:: python
 
@@ -165,8 +168,8 @@ The utility also supports explicitly requesting SSL (``?ssl=true``), TLS
         globals().update(django_email_url(env("EMAIL_URL", default="smtp://")))
 
 
-Automatically substituting other 12factor libraries
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Automatically substituting other Django 12factor libraries
+==========================================================
 
 speckenv ships a Python module which inserts Python modules named
 ``dj_database_url``, ``django_cache_url`` and ``dj_email_url`` into
@@ -180,3 +183,12 @@ insert the following line at the top of your settings module:
 .. code-block:: python
 
     import speckenv_django_patch  # noqa isort:skip
+
+    import dj_database_url, django_cache_url, dj_email_url
+    DATABASES = dj_database_url.config()
+    CACHES = django_cache_url.config()
+    globals().update(dj_email_url.config())
+
+You should check the module's code to view defaults; they are adopted from the
+libraries which are being substituted, but when you're in doubt better check
+twice.
