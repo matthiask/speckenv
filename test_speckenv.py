@@ -23,6 +23,8 @@ COMMENT_STR_QUOTED="value  # TEST"
 COMMENT_INT=42  # TEST
 
 NO_EQUAL_SIGN
+
+"STRANGE_KEY"=42
 """
             )
 
@@ -64,6 +66,9 @@ NO_EQUAL_SIGN
 
     def test_int_as_string(self):
         self.assertEqual(speckenv.env("COMMENT_INT", coerce=str), "42")
+
+    def test_strange_key(self):
+        self.assertEqual(speckenv.env('"STRANGE_KEY"'), 42)
 
 
 class CustomMappingTestCase(TestCase):

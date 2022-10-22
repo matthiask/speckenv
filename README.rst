@@ -66,7 +66,8 @@ You shouldn't use comments in lines though. They sometimes work by accident but
 it's a bad idea.
 
 If a value looks like a Python type but you want to load it as a string you
-have to use coercion, e.g.
+have to add quote characters (``"`` or ``'``) around the value or use coercion,
+e.g.
 
 .. code-block:: python
 

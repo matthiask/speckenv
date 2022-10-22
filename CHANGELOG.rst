@@ -7,6 +7,13 @@ Change log
 
 .. _Next version: https://github.com/matthiask/speckenv/compare/4.0...main
 
+- **Backwards incompatible for edge cases:** Changed the ``.env`` file parser
+  to NOT strip quotes from keys and values. This fixes the probably unexpected
+  behavior where ``VALUE="42"`` produced an integer instead of a string. This
+  only affects you if e.g. you added a quoted value to an ``.env`` file where
+  you didn't want a string but the interpreted value. (E.g. ``COUNT="3"``).
+  Just remove the quotes and you'll be good.
+
 
 `4.0`_ (2022-08-18)
 ~~~~~~~~~~~~~~~~~~~

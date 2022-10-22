@@ -36,7 +36,7 @@ def read_speckenv(
             line = line.strip()
             if not line or line.startswith("#") or "=" not in line:
                 continue
-            key, value = tuple(v.strip("'\" \t") for v in line.split("=", 1))
+            key, value = tuple(v.strip(" \t") for v in line.split("=", 1))
             mapping.setdefault(key, value)
 
 
