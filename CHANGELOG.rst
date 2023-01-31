@@ -13,6 +13,7 @@ Change log
   only affects you if e.g. you added a quoted value to an ``.env`` file where
   you didn't want a string but the interpreted value. (E.g. ``COUNT="3"``).
   Just remove the quotes and you'll be good.
+- Added Python 3.11 to the matrix.
 
 
 `4.0`_ (2022-08-18)
