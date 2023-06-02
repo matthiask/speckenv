@@ -183,7 +183,7 @@ insert the following line at the top of your settings module:
 
 .. code-block:: python
 
-    import speckenv_django_patch  # noqa isort:skip
+    import speckenv_django_patch  # noqa: isort:skip
 
     import dj_database_url, django_cache_url, dj_email_url
     DATABASES = dj_database_url.config()
