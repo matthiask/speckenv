@@ -32,8 +32,8 @@ def read_speckenv(
     # Not sure whether we should try handling other encodings than ASCII
     # at all...
     with open(path) as f:
-        for line in f:
-            line = line.strip()
+        lines = (line.strip() for line in f)
+        for line in lines:
             if not line or line.startswith("#") or "=" not in line:
                 continue
             key, value = tuple(v.strip(" \t") for v in line.split("=", 1))

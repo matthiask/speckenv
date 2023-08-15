@@ -1,6 +1,0 @@
-include LICENSE
-include MANIFEST.in
-include README.rst
-include speckenv.py
-include speckenv_django.py
-include speckenv_django_patch.py

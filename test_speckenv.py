@@ -45,14 +45,14 @@ NO_EQUAL_SIGN
 
         # Not defined values
         self.assertEqual(speckenv.env("UNDEFINED"), None)
-        self.assertIs(speckenv.env("UNDEFINED", coerce=bool), False)
+        self.assertFalse(speckenv.env("UNDEFINED", coerce=bool))
         self.assertRaises(SystemExit, speckenv.env, "UNDEFINED", required=True)
 
         # Defaults
         self.assertEqual(speckenv.env("DEFAULT"), None)
         self.assertEqual(speckenv.env("DEFAULT", default=42), 42)
         self.assertEqual(speckenv.env("COMMENTED", default=42), "no")
-        self.assertIs(speckenv.env("COMMENTED", default="bla", coerce=bool), True)
+        self.assertTrue(speckenv.env("COMMENTED", default="bla", coerce=bool))
 
         self.assertNotIn("NO_EQUAL_SIGN", os.environ)
 
