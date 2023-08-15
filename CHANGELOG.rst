@@ -2,10 +2,11 @@
 Change log
 ==========
 
-`Next version`_
-~~~~~~~~~~~~~~~
+Next version
+~~~~~~~~~~~~
 
-.. _Next version: https://github.com/matthiask/speckenv/compare/4.0...main
+5.0 (2023-08-15)
+~~~~~~~~~~~~~~~~
 
 - **Backwards incompatible for edge cases:** Changed the ``.env`` file parser
   to NOT strip quotes from keys and values. This fixes the probably unexpected
@@ -20,7 +21,7 @@ Change log
 `4.0`_ (2022-08-18)
 ~~~~~~~~~~~~~~~~~~~
 
-.. _3.4: https://github.com/matthiask/speckenv/compare/3.3...3.4
+.. _4.0: https://github.com/matthiask/speckenv/compare/3.4...4.0
 
 - Allowed warning on missing required keys.
 - Changed the code to use ``sys.exit`` with a custom message when encountering
