@@ -1,10 +1,15 @@
 from urllib import parse
 
 
+class InvalidURLError(Exception):
+    pass
+
+
 __all__ = [
     "django_cache_url",
     "django_database_url",
     "django_email_url",
+    "django_storage_url",
 ]
 
 
@@ -120,3 +125,41 @@ def django_email_url(s, /):
     if email := qs.get("_server_email"):
         config["SERVER_EMAIL"] = email
     return config
+
+
+def _file_storage_url(url, qs):
+    return {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "OPTIONS": {"location": _unquote(url.path), "base_url": None} | qs,
+    }
+
+
+def _s3_storage_url(url, qs):
+    parts = _unquote(url.netloc).rsplit("@", 1)[-1].split(".")
+    if parts[1] != "s3" or parts[3] != "amazonaws" or parts[4] != "com":
+        raise InvalidURLError(
+            "Unexpected domain part. Should be bucket.s3.region.amazonaws.com."
+        )
+    return {
+        "BACKEND": "django_s3_storage.storage.S3Storage",
+        "OPTIONS": {
+            "aws_region": parts[2],
+            "aws_access_key_id": _unquote(url.username or ""),
+            "aws_secret_access_key": _unquote(url.password or ""),
+            "aws_s3_bucket_name": parts[0],
+            "aws_s3_key_prefix": _unquote(url.path.strip("/")),
+        }
+        | qs,
+    }
+
+
+INTERESTING_STORAGE_BACKENDS = {
+    "file": _file_storage_url,
+    "s3": _s3_storage_url,
+}
+
+
+def django_storage_url(s, /):
+    url = parse.urlparse(s)
+    qs = dict(parse.parse_qsl(url.query))
+    return INTERESTING_STORAGE_BACKENDS[url.scheme](url, qs)
