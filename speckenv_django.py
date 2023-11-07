@@ -23,7 +23,7 @@ def _unquote(value):
 
 def django_database_url(s, /):
     url = parse.urlparse(s)
-    qs = parse.parse_qs(url.query)
+    qs = dict(parse.parse_qsl(url.query))
 
     config = {
         "ENGINE": INTERESTING_DATABASE_BACKENDS[url.scheme],
@@ -35,7 +35,7 @@ def django_database_url(s, /):
     }
 
     if conn_max_age := qs.get("conn_max_age"):
-        config["CONN_MAX_AGE"] = int(conn_max_age[0])
+        config["CONN_MAX_AGE"] = int(conn_max_age)
 
     return config
 
@@ -50,7 +50,7 @@ def _redis_cache_url(url, qs):
         # if it's available
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
         "LOCATION": f"redis://{url.netloc}",
-        "KEY_PREFIX": qs["key_prefix"][0] if qs.get("key_prefix") else "",
+        "KEY_PREFIX": qs.get("key_prefix", ""),
         "OPTIONS": options,
     }
 
@@ -59,7 +59,7 @@ def _locmem_cache_url(url, qs):
     return {
         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
         "LOCATION": url.netloc,
-        "KEY_PREFIX": qs["key_prefix"][0] if qs.get("key_prefix") else "",
+        "KEY_PREFIX": qs.get("key_prefix", ""),
     }
 
 
@@ -73,7 +73,7 @@ INTERESTING_CACHE_BACKENDS = {
 
 def django_cache_url(s, /):
     url = parse.urlparse(s)
-    qs = parse.parse_qs(url.query)
+    qs = dict(parse.parse_qsl(url.query))
     return INTERESTING_CACHE_BACKENDS[url.scheme](url, qs)
 
 
@@ -88,7 +88,7 @@ INTERESTING_MAIL_BACKENDS = {
 
 def django_email_url(s, /):
     url = parse.urlparse(s)
-    qs = parse.parse_qs(url.query)
+    qs = dict(parse.parse_qsl(url.query))
 
     config = {
         "EMAIL_BACKEND": INTERESTING_MAIL_BACKENDS[url.scheme],
@@ -113,10 +113,10 @@ def django_email_url(s, /):
     if "tls" in qs:
         config["EMAIL_USE_SSL"] = False
         config["EMAIL_USE_TLS"] = True
-    if "timeout" in qs:
-        config["EMAIL_TIMEOUT"] = int(qs["timeout"][0])
-    if "_default_from_email" in qs:
-        config["DEFAULT_FROM_EMAIL"] = qs["_default_from_email"][0]
-    if "_server_email" in qs:
-        config["SERVER_EMAIL"] = qs["_server_email"][0]
+    if timeout := qs.get("timeout"):
+        config["EMAIL_TIMEOUT"] = int(timeout)
+    if email := qs.get("_default_from_email"):
+        config["DEFAULT_FROM_EMAIL"] = email
+    if email := qs.get("_server_email"):
+        config["SERVER_EMAIL"] = email
     return config
