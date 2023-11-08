@@ -5,6 +5,10 @@ Change log
 Next version
 ~~~~~~~~~~~~
 
+
+6.0 (2023-11-08)
+~~~~~~~~~~~~~~~~
+
 - Switched from black to the ruff formatter.
 - Updated the pre-commit hooks.
 - Added an experimental ``django_storage_url`` utility to ``speckenv_django``

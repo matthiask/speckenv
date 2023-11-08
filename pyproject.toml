@@ -6,7 +6,7 @@ requires = [
 
 [project]
 name = "speckenv"
-version = "5.0"
+version = "6.0"
 readme = "README.rst"
 license = {text= "BSD-3-Clause"}
 authors = [
