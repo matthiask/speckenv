@@ -5,6 +5,15 @@ Change log
 Next version
 ~~~~~~~~~~~~
 
+- Switched from black to the ruff formatter.
+- Updated the pre-commit hooks.
+- Added an experimental ``django_storage_url`` utility to ``speckenv_django``
+  which allows configuring the bundled file system storage and also a storage
+  using `django-s3-storage <https://github.com/etianen/django-s3-storage/>`__'s
+  `S3Storage` backend.
+- Dropped support for Python 3.8.
+
+
 5.0 (2023-08-15)
 ~~~~~~~~~~~~~~~~
 
