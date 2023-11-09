@@ -64,7 +64,7 @@ class DjangoStorageURLTest(TestCase):
             },
         )
 
-    def test_other_s3(self):
+    def test_other_s3_nine(self):
         # https://docs.nine.ch/docs/object-storage/object-storage-client-tools
         url = "s3://6aaf50b17357446bb:fcf1c9c6bc5c43@cz42.objectstorage.nineapis.ch/bucket-etj4mwc/thing/?aws_region=nine-cz42"
         self.assertEqual(
@@ -78,6 +78,24 @@ class DjangoStorageURLTest(TestCase):
                     "aws_secret_access_key": "fcf1c9c6bc5c43",
                     "aws_s3_bucket_name": "bucket-etj4mwc",
                     "aws_s3_key_prefix": "thing",
+                },
+            },
+        )
+
+    def test_other_s3_digitalocean(self):
+        # https://docs.digitalocean.com/reference/api/spaces-api/
+        url = "s3://access-key:secret-key@nyc3.digitaloceanspaces.com/example-space-name/key-prefix/?aws_region=nyc3"
+        self.assertEqual(
+            django_storage_url(url),
+            {
+                "BACKEND": "django_s3_storage.storage.S3Storage",
+                "OPTIONS": {
+                    "aws_access_key_id": "access-key",
+                    "aws_secret_access_key": "secret-key",
+                    "aws_region": "nyc3",
+                    "aws_s3_key_prefix": "key-prefix",
+                    "aws_s3_endpoint_url": "https://nyc3.digitaloceanspaces.com",
+                    "aws_s3_bucket_name": "example-space-name",
                 },
             },
         )
