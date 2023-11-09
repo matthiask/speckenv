@@ -99,3 +99,23 @@ class DjangoStorageURLTest(TestCase):
                 },
             },
         )
+
+    def test_s3_parameters(self):
+        url = "s3://access-key-id:secret-access-key@bucket-name.s3.eu-central-1.amazonaws.com/media/?aws_s3_public_auth=False&aws_s3_gzip=True&aws_s3_connect_timeout=120"
+        self.assertEqual(
+            django_storage_url(url),
+            {
+                "BACKEND": "django_s3_storage.storage.S3Storage",
+                "OPTIONS": {
+                    "aws_region": "eu-central-1",
+                    "aws_access_key_id": "access-key-id",
+                    "aws_secret_access_key": "secret-access-key",
+                    "aws_s3_bucket_name": "bucket-name",
+                    "aws_s3_key_prefix": "media",
+                    # Types!
+                    "aws_s3_public_auth": False,
+                    "aws_s3_gzip": True,
+                    "aws_s3_connect_timeout": 120,
+                },
+            },
+        )

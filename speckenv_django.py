@@ -1,3 +1,4 @@
+import ast
 from urllib import parse
 
 
@@ -138,6 +139,13 @@ def _s3_bucket_name_key_prefix_from_path(path):
     }
 
 
+def _try_eval(value):
+    try:
+        return ast.literal_eval(value)
+    except (SyntaxError, ValueError):
+        return value
+
+
 def _s3_storage_url(url, qs):
     parts = _unquote(url.netloc).rsplit("@", 1)[-1].split(".")
     options = {
@@ -158,7 +166,7 @@ def _s3_storage_url(url, qs):
 
     return {
         "BACKEND": "django_s3_storage.storage.S3Storage",
-        "OPTIONS": options | qs,
+        "OPTIONS": options | {key: _try_eval(value) for key, value in qs.items()},
     }
 
 
