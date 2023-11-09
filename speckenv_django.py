@@ -1,10 +1,6 @@
 from urllib import parse
 
 
-class InvalidURLError(Exception):
-    pass
-
-
 __all__ = [
     "django_cache_url",
     "django_database_url",
@@ -134,22 +130,35 @@ def _file_storage_url(url, qs):
     }
 
 
+def _s3_bucket_name_key_prefix_from_path(path):
+    path = _unquote(path.strip("/")).split("/")
+    return {
+        "aws_s3_bucket_name": path[0],
+        "aws_s3_key_prefix": "/".join(path[1:]),
+    }
+
+
 def _s3_storage_url(url, qs):
     parts = _unquote(url.netloc).rsplit("@", 1)[-1].split(".")
-    if parts[1] != "s3" or parts[3] != "amazonaws" or parts[4] != "com":
-        raise InvalidURLError(
-            "Unexpected domain part. Should be bucket.s3.region.amazonaws.com."
-        )
+    options = {
+        "aws_access_key_id": _unquote(url.username or ""),
+        "aws_secret_access_key": _unquote(url.password or ""),
+        "aws_s3_key_prefix": _unquote(url.path.strip("/")),
+    }
+    if parts[-2:] == ["amazonaws", "com"]:
+        options["aws_region"] = parts[-3]
+        if parts[0] == "s3":
+            options |= _s3_bucket_name_key_prefix_from_path(url.path)
+        else:
+            options["aws_s3_bucket_name"] = ".".join(parts[:-4])
+    else:
+        # Assume another S3 service
+        options["aws_s3_endpoint_url"] = "https://" + ".".join(parts)
+        options |= _s3_bucket_name_key_prefix_from_path(url.path)
+
     return {
         "BACKEND": "django_s3_storage.storage.S3Storage",
-        "OPTIONS": {
-            "aws_region": parts[2],
-            "aws_access_key_id": _unquote(url.username or ""),
-            "aws_secret_access_key": _unquote(url.password or ""),
-            "aws_s3_bucket_name": parts[0],
-            "aws_s3_key_prefix": _unquote(url.path.strip("/")),
-        }
-        | qs,
+        "OPTIONS": options | qs,
     }
 
 
