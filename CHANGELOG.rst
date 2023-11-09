@@ -6,6 +6,12 @@ Next version
 ~~~~~~~~~~~~
 
 
+6.1 (2023-11-09)
+~~~~~~~~~~~~~~~~
+
+- Made the storage URL parsing more flexible and handle more cases.
+
+
 6.0 (2023-11-08)
 ~~~~~~~~~~~~~~~~
 
