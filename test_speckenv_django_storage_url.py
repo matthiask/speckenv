@@ -33,7 +33,7 @@ class DjangoStorageURLTest(TestCase):
         )
 
     def test_parse_s3_vhost(self):
-        url = "s3://access-key-id:secret-access-key@bucket-name.s3.eu-central-1.amazonaws.com/media/"
+        url = "s3://access-key-id:secret-access-key@bucket.name.s3.eu-central-1.amazonaws.com/media/"
         self.assertEqual(
             django_storage_url(url),
             {
@@ -42,7 +42,7 @@ class DjangoStorageURLTest(TestCase):
                     "aws_region": "eu-central-1",
                     "aws_access_key_id": "access-key-id",
                     "aws_secret_access_key": "secret-access-key",
-                    "aws_s3_bucket_name": "bucket-name",
+                    "aws_s3_bucket_name": "bucket.name",
                     "aws_s3_key_prefix": "media",
                 },
             },
