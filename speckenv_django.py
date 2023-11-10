@@ -1,4 +1,5 @@
 import ast
+from pathlib import Path
 from urllib import parse
 
 
@@ -124,10 +125,10 @@ def django_email_url(s, /):
     return config
 
 
-def _file_storage_url(url, qs):
+def _file_storage_url(url, qs, *, base_dir):
     return {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
-        "OPTIONS": {"location": _unquote(url.path), "base_url": None} | qs,
+        "OPTIONS": {"location": base_dir / _unquote(url.path), "base_url": None} | qs,
     }
 
 
@@ -146,7 +147,7 @@ def _try_eval(value):
         return value
 
 
-def _s3_storage_url(url, qs):
+def _s3_storage_url(url, qs, *, base_dir):
     parts = _unquote(url.netloc).rsplit("@", 1)[-1].split(".")
     options = {
         "aws_access_key_id": _unquote(url.username or ""),
@@ -176,7 +177,9 @@ INTERESTING_STORAGE_BACKENDS = {
 }
 
 
-def django_storage_url(s, /):
+def django_storage_url(s, /, base_dir=None):
+    if base_dir is None:
+        base_dir = Path.cwd().resolve()
     url = parse.urlparse(s)
     qs = dict(parse.parse_qsl(url.query))
-    return INTERESTING_STORAGE_BACKENDS[url.scheme](url, qs)
+    return INTERESTING_STORAGE_BACKENDS[url.scheme](url, qs, base_dir=base_dir)

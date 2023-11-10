@@ -1,3 +1,4 @@
+from pathlib import Path
 from unittest import TestCase
 
 from speckenv_django import django_storage_url
@@ -7,27 +8,41 @@ class DjangoStorageURLTest(TestCase):
     maxDiff = None
 
     def test_parse_storage_url(self):
-        url = "file:///test/media/"
+        url = "file:/test/media/"
         self.assertEqual(
             django_storage_url(url),
             {
                 "BACKEND": "django.core.files.storage.FileSystemStorage",
                 "OPTIONS": {
                     "base_url": None,
-                    "location": "/test/media/",
+                    "location": Path("/test/media/"),
                 },
             },
         )
 
     def test_parse_storage_url_with_url(self):
-        url = "file:///test/media/?base_url=/media/"
+        url = "file:/test/media/?base_url=/media/"
         self.assertEqual(
             django_storage_url(url),
             {
                 "BACKEND": "django.core.files.storage.FileSystemStorage",
                 "OPTIONS": {
                     "base_url": "/media/",
-                    "location": "/test/media/",
+                    "location": Path("/test/media/"),
+                },
+            },
+        )
+
+    def test_parse_relative_url(self):
+        cwd = Path("/hello/world/")
+        url = "file:./relative/"
+        self.assertEqual(
+            django_storage_url(url, base_dir=cwd),
+            {
+                "BACKEND": "django.core.files.storage.FileSystemStorage",
+                "OPTIONS": {
+                    "base_url": None,
+                    "location": Path("/hello/world/relative/"),
                 },
             },
         )

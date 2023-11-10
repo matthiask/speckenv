@@ -5,6 +5,9 @@ Change log
 Next version
 ~~~~~~~~~~~~
 
+- Implemented a way to specify relative folders when using ``file:`` URLs with
+  ``django_storage_url``.
+
 
 6.1 (2023-11-09)
 ~~~~~~~~~~~~~~~~
