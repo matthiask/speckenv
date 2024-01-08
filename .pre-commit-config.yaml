@@ -21,7 +21,7 @@ repos:
           - --target-version
           - "3.2"
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.1.5
+    rev: v0.1.11
     hooks:
       - id: ruff
       - id: ruff-format
@@ -34,7 +34,7 @@ repos:
           - --no-semi
         exclude: ^conf/|.*\.html$
   - repo: https://github.com/tox-dev/pyproject-fmt
-    rev: 1.5.1
+    rev: 1.5.3
     hooks:
       - id: pyproject-fmt
   - repo: https://github.com/abravalheri/validate-pyproject

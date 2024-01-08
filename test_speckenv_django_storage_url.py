@@ -81,7 +81,7 @@ class DjangoStorageURLTest(TestCase):
 
     def test_other_s3_nine(self):
         # https://docs.nine.ch/docs/object-storage/object-storage-client-tools
-        url = "s3://6aaf50b17357446bb:fcf1c9c6bc5c43@cz42.objectstorage.nineapis.ch/bucket-etj4mwc/thing/?aws_region=nine-cz42"
+        url = "s3://6aaf50b17357446bb:fcf1c9c6bc5c43@cz42.objectstorage.nineapis.ch/bucket-etj4mwc/thing/?aws_region=nine-cz42&aws_s3_public_url=https://cz42.objectstorage.nineapis.ch/v1/AUTH_7209e15171e/bucket-etj4mwc/"
         self.assertEqual(
             django_storage_url(url),
             {
@@ -92,6 +92,7 @@ class DjangoStorageURLTest(TestCase):
                     "aws_access_key_id": "6aaf50b17357446bb",
                     "aws_secret_access_key": "fcf1c9c6bc5c43",
                     "aws_s3_bucket_name": "bucket-etj4mwc",
+                    "aws_s3_public_url": "https://cz42.objectstorage.nineapis.ch/v1/AUTH_7209e15171e/bucket-etj4mwc/",
                     "aws_s3_key_prefix": "thing",
                 },
             },
