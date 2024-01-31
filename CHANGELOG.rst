@@ -8,6 +8,7 @@ Next version
 - Implemented a way to specify relative folders when using ``file:`` URLs with
   ``django_storage_url``.
 - Added Python 3.12 to the CI.
+- Added support for replicas to ``django_cache_url``.
 
 
 6.1 (2023-11-09)

@@ -48,11 +48,13 @@ def _redis_cache_url(url, qs):
     if db := url.path.strip("/"):
         options["db"] = db
 
+    locations = [f"redis://{netloc}" for netloc in url.netloc.split(",")]
+
     return {
         # No need to set hiredis; redis-py automatically selects hiredis
         # if it's available
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": f"redis://{url.netloc}",
+        "LOCATION": locations[0] if len(locations) == 1 else locations,
         "KEY_PREFIX": qs.get("key_prefix", ""),
         "OPTIONS": options,
     }

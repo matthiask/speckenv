@@ -40,6 +40,24 @@ class DjangoCacheURLTest(TestCase):
             },
         )
 
+    def test_parse_redis_with_replicas(self):
+        url = (
+            "redis://10.0.0.1:6379,10.0.0.2:6379,10.0.0.3:6379/?key_prefix=example_com"
+        )
+        self.assertEqual(
+            django_cache_url(url),
+            {
+                "BACKEND": "django.core.cache.backends.redis.RedisCache",
+                "LOCATION": [
+                    "redis://10.0.0.1:6379",
+                    "redis://10.0.0.2:6379",
+                    "redis://10.0.0.3:6379",
+                ],
+                "KEY_PREFIX": "example_com",
+                "OPTIONS": {},
+            },
+        )
+
     def test_parse_locmem_url(self):
         self.assertEqual(
             django_cache_url("locmem://"),
