@@ -5,6 +5,9 @@ Change log
 Next version
 ~~~~~~~~~~~~
 
+- Added Python 3.13 to the CI.
+
+
 6.2 (2024-02-01)
 ~~~~~~~~~~~~~~~~
 
