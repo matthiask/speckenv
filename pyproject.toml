@@ -24,11 +24,12 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
 ]
 urls.Homepage = "https://github.com/matthiask/speckenv/"
 
-[tool.hatch.build]
-include = [
+[tool.hatch]
+build.include = [
   "speckenv.py",
   "speckenv_django.py",
   "speckenv_django_patch.py",
@@ -36,9 +37,14 @@ include = [
 
 [tool.ruff]
 target-version = "py39"
-
 fix = true
 show-fixes = true
+extend-ignore = [
+  # Allow zip() without strict=
+  "B905",
+  # No line length errors
+  "E501",
+]
 extend-select = [
   # pyflakes, pycodestyle
   "F",
@@ -79,15 +85,9 @@ extend-select = [
   # unused noqa
   "RUF100",
 ]
-extend-ignore = [
-  # Allow zip() without strict=
-  "B905",
-  # No line length errors
-  "E501",
-]
-mccabe.max-complexity = 15
 isort.combine-as-imports = true
 isort.lines-after-imports = 2
+mccabe.max-complexity = 15
 per-file-ignores."*/migrat*/*" = [
   # Allow using PascalCase model names in migrations
   "N806",
