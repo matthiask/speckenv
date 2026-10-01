@@ -162,7 +162,7 @@ pass the return value to ``globals().update()``.
     from speckenv import env
     from speckenv_django import django_email_url
 
-    # DATABASE_URL=smtp://
+    # EMAIL_URL=smtp://
     if DEBUG:
         globals().update(django_email_url(env("EMAIL_URL", default="console://")))
     else:
