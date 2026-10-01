@@ -7,6 +7,7 @@ requires = [
 [project]
 name = "speckenv"
 version = "6.3.0"
+description = "Load environment from .env. Includes some optional Django goodies."
 readme = "README.rst"
 license = { text = "BSD-3-Clause" }
 authors = [
