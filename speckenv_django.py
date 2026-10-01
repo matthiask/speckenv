@@ -7,6 +7,7 @@ __all__ = [
     "django_cache_url",
     "django_database_url",
     "django_email_url",
+    "django_mailer_url",
     "django_storage_url",
 ]
 
@@ -91,39 +92,97 @@ INTERESTING_MAIL_BACKENDS = {
 }
 
 
-def django_email_url(s, /):
-    url = parse.urlparse(s)
-    qs = dict(parse.parse_qsl(url.query))
-
-    config = {
-        "EMAIL_BACKEND": INTERESTING_MAIL_BACKENDS[url.scheme],
-        "EMAIL_HOST_USER": _unquote(url.username or ""),
-        "EMAIL_HOST_PASSWORD": _unquote(url.password or ""),
-        "EMAIL_HOST": url.hostname,
-        "EMAIL_PORT": url.port,
-        "EMAIL_TIMEOUT": None,
-        "EMAIL_USE_SSL": False,
-        "EMAIL_USE_TLS": False,
+def _smtp_options(url, qs):
+    options = {
+        "host": url.hostname,
+        "port": url.port,
+        "username": _unquote(url.username or ""),
+        "password": _unquote(url.password or ""),
+        "use_tls": False,
+        "use_ssl": False,
+        "timeout": None,
     }
 
     if url.scheme == "smtp":
-        config["EMAIL_HOST"] = url.hostname or "localhost"
-        config["EMAIL_PORT"] = url.port or 25
+        options["host"] = url.hostname or "localhost"
+        options["port"] = url.port or 25
     if url.scheme == "submission":
-        config["EMAIL_USE_TLS"] = True
-        config["EMAIL_PORT"] = url.port or 587
+        options["use_tls"] = True
+        options["port"] = url.port or 587
     if "ssl" in qs:
-        config["EMAIL_USE_SSL"] = True
-        config["EMAIL_USE_TLS"] = False
+        options["use_ssl"] = True
+        options["use_tls"] = False
     if "tls" in qs:
-        config["EMAIL_USE_SSL"] = False
-        config["EMAIL_USE_TLS"] = True
+        options["use_ssl"] = False
+        options["use_tls"] = True
     if timeout := qs.get("timeout"):
-        config["EMAIL_TIMEOUT"] = int(timeout)
+        options["timeout"] = int(timeout)
+    return options
+
+
+def django_email_url(s, /):
+    url = parse.urlparse(s)
+    qs = dict(parse.parse_qsl(url.query))
+    options = _smtp_options(url, qs)
+
+    config = {
+        "EMAIL_BACKEND": INTERESTING_MAIL_BACKENDS[url.scheme],
+        "EMAIL_HOST_USER": options["username"],
+        "EMAIL_HOST_PASSWORD": options["password"],
+        "EMAIL_HOST": options["host"],
+        "EMAIL_PORT": options["port"],
+        "EMAIL_TIMEOUT": options["timeout"],
+        "EMAIL_USE_SSL": options["use_ssl"],
+        "EMAIL_USE_TLS": options["use_tls"],
+    }
+
     if email := qs.get("_default_from_email"):
         config["DEFAULT_FROM_EMAIL"] = email
     if email := qs.get("_server_email"):
         config["SERVER_EMAIL"] = email
+    return config
+
+
+def _smtp_mailer_url(url, qs):
+    options = _smtp_options(url, qs)
+    for key in ("ssl_keyfile", "ssl_certfile"):
+        if value := qs.get(key):
+            options[key] = value
+    return {
+        "BACKEND": "django.core.mail.backends.smtp.EmailBackend",
+        "OPTIONS": options,
+    }
+
+
+def _optionless_mailer_url(backend):
+    return lambda url, qs: {"BACKEND": backend, "OPTIONS": {}}
+
+
+INTERESTING_MAILER_BACKENDS = {
+    "smtp": _smtp_mailer_url,
+    "submission": _smtp_mailer_url,
+    "locmem": _optionless_mailer_url("django.core.mail.backends.locmem.EmailBackend"),
+    "console": _optionless_mailer_url("django.core.mail.backends.console.EmailBackend"),
+    "dummy": _optionless_mailer_url("django.core.mail.backends.dummy.EmailBackend"),
+}
+
+
+def django_mailer_url(s, /, *, backend=None):
+    url = parse.urlparse(s)
+    qs = dict(parse.parse_qsl(url.query))
+
+    if "_server_email" in qs:
+        raise ValueError(
+            "_server_email cannot be part of a MAILERS entry,"
+            " set SERVER_EMAIL separately."
+        )
+
+    config = INTERESTING_MAILER_BACKENDS[url.scheme](url, qs)
+    # Only supported by custom backends, Django rejects it otherwise
+    if email := qs.get("_default_from_email"):
+        config["OPTIONS"]["default_from_email"] = email
+    if backend:
+        config["BACKEND"] = backend
     return config
 
 

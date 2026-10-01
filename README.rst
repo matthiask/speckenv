@@ -168,6 +168,36 @@ pass the return value to ``globals().update()``.
     else:
         globals().update(django_email_url(env("EMAIL_URL", default="smtp://")))
 
+Django 6.1 deprecated the individual ``EMAIL_*`` settings in favor of the
+``MAILERS`` dictionary; use ``django_mailer_url`` below instead when you're
+using Django 6.1 or better.
+
+
+``django_mailer_url``
+~~~~~~~~~~~~~~~~~~~~~
+
+Returns an entry for the ``MAILERS`` dictionary introduced in Django 6.1.
+Supports the same URLs as ``django_email_url``, and additionally accepts
+``?ssl_keyfile=...`` and ``?ssl_certfile=...``. ``SERVER_EMAIL`` isn't a part
+of a mailer's configuration, so ``_server_email`` raises a ``ValueError``.
+``_default_from_email`` is passed on as a ``default_from_email`` option; Django's
+own backends reject it, but custom backends may support it. Use the ``backend``
+keyword argument to select such a backend, e.g.
+``django_mailer_url(url, backend="email_hosts.backends.EmailHostsBackend")``.
+
+.. code-block:: python
+
+    from speckenv import env
+    from speckenv_django import django_mailer_url
+
+    # MAILER_URL=submission://user:password@smtp.example.com
+    MAILERS = {
+        "default": django_mailer_url(
+            env("MAILER_URL", default="console://" if DEBUG else "smtp://")
+        )
+    }
+    DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="webmaster@localhost")
+
 
 Automatically substituting other Django 12factor libraries
 ==========================================================
