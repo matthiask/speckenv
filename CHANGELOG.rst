@@ -5,6 +5,9 @@ Change log
 Next version
 ~~~~~~~~~~~~
 
+6.3 (2026-10-01)
+~~~~~~~~~~~~~~~~
+
 - Added Python 3.13, 3.14 to the CI.
 - Added ``django_mailer_url`` for configuring entries of the ``MAILERS``
   setting introduced in Django 6.1.
