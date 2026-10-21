@@ -5,6 +5,9 @@ Change log
 Next version
 ~~~~~~~~~~~~
 
+6.4 (2026-10-21)
+~~~~~~~~~~~~~~~~
+
 - Passed query string parameters of Redis cache URLs (except ``key_prefix``)
   on to redis-py's connection pool as ``OPTIONS``, e.g. ``socket_timeout``,
   ``socket_connect_timeout`` and ``health_check_interval``.
