@@ -45,7 +45,11 @@ def django_database_url(s, /):
 
 
 def _redis_cache_url(url, qs):
-    options = {}
+    # Everything except key_prefix is passed on to redis-py's connection pool,
+    # e.g. socket_timeout=2&health_check_interval=30&socket_keepalive=True
+    options = {
+        key: _try_eval(value) for key, value in qs.items() if key != "key_prefix"
+    }
     if db := url.path.strip("/"):
         options["db"] = db
 

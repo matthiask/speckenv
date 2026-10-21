@@ -116,7 +116,11 @@ Covers configuring a Redis, locmem or dummy cache backend with optional
 authentication credentials. The Redis configuration only supports Django 4 or
 better. ``redis://`` and ``hiredis://`` are equivalent since recent enough
 versions of redis-py automatically select the hiredis parser if it is
-available.
+available. Query string parameters other than ``key_prefix`` are passed on to
+redis-py's connection pool; values are parsed using ``ast.literal_eval`` where
+possible. Setting timeouts is a good idea, without them a request may hang for
+a long time if the Redis server goes away without closing the connection:
+``?socket_connect_timeout=2&socket_timeout=2&health_check_interval=30``.
 
 .. code-block:: python
 

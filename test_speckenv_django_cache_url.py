@@ -58,6 +58,28 @@ class DjangoCacheURLTest(TestCase):
             },
         )
 
+    def test_parse_redis_pool_options(self):
+        url = (
+            "redis://localhost:6379/1/?key_prefix=example_com"
+            "&socket_connect_timeout=2&socket_timeout=1.5"
+            "&health_check_interval=30&socket_keepalive=True"
+        )
+        self.assertEqual(
+            django_cache_url(url),
+            {
+                "BACKEND": "django.core.cache.backends.redis.RedisCache",
+                "LOCATION": "redis://localhost:6379",
+                "KEY_PREFIX": "example_com",
+                "OPTIONS": {
+                    "db": "1",
+                    "socket_connect_timeout": 2,
+                    "socket_timeout": 1.5,
+                    "health_check_interval": 30,
+                    "socket_keepalive": True,
+                },
+            },
+        )
+
     def test_parse_locmem_url(self):
         self.assertEqual(
             django_cache_url("locmem://"),
