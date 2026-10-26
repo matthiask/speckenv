@@ -144,6 +144,8 @@ authentication credentials.
     from speckenv_django import django_database_url
 
     # DATABASE_URL=postgres://localhost:5432/example_com
+    # DATABASE_URL=sqlite:///db.sqlite3 (relative path)
+    # DATABASE_URL=sqlite:////var/db/example.sqlite3 (absolute path)
     DATABASES = {"default": django_database_url(env("DATABASE_URL", required=True))}
 
 

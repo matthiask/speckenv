@@ -29,14 +29,25 @@ def django_database_url(s, /):
     url = parse.urlparse(s)
     qs = dict(parse.parse_qsl(url.query))
 
-    config = {
-        "ENGINE": INTERESTING_DATABASE_BACKENDS[url.scheme],
-        "NAME": _unquote(url.path.strip("/")),
-        "USER": _unquote(url.username or ""),
-        "PASSWORD": _unquote(url.password or ""),
-        "HOST": _unquote(url.hostname or ""),
-        "PORT": str(url.port) if url.port else "",
-    }
+    if url.scheme == "sqlite":
+        # sqlite:///relative.db, sqlite:////absolute.db, sqlite://:memory:
+        config = {
+            "ENGINE": INTERESTING_DATABASE_BACKENDS[url.scheme],
+            "NAME": _unquote(url.path[1:]) or ":memory:",
+            "USER": "",
+            "PASSWORD": "",
+            "HOST": "",
+            "PORT": "",
+        }
+    else:
+        config = {
+            "ENGINE": INTERESTING_DATABASE_BACKENDS[url.scheme],
+            "NAME": _unquote(url.path.strip("/")),
+            "USER": _unquote(url.username or ""),
+            "PASSWORD": _unquote(url.password or ""),
+            "HOST": _unquote(url.hostname or ""),
+            "PORT": str(url.port) if url.port else "",
+        }
 
     if conn_max_age := qs.get("conn_max_age"):
         config["CONN_MAX_AGE"] = int(conn_max_age)

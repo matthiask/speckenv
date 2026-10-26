@@ -61,6 +61,29 @@ class DjangoDatabaseURLTest(TestCase):
             },
         )
 
+    def test_parse_sqlite_database_url(self):
+        for url, name in [
+            ("sqlite:///db.sqlite3", "db.sqlite3"),
+            ("sqlite:///tmp/db.sqlite3", "tmp/db.sqlite3"),
+            ("sqlite:////var/db/db.sqlite3", "/var/db/db.sqlite3"),
+            ("sqlite:///my%20db.sqlite3", "my db.sqlite3"),
+            ("sqlite://:memory:", ":memory:"),
+            ("sqlite:///:memory:", ":memory:"),
+            ("sqlite://", ":memory:"),
+        ]:
+            with self.subTest(url=url):
+                self.assertEqual(
+                    django_database_url(url),
+                    {
+                        "ENGINE": "django.db.backends.sqlite3",
+                        "NAME": name,
+                        "USER": "",
+                        "PASSWORD": "",
+                        "HOST": "",
+                        "PORT": "",
+                    },
+                )
+
     def test_parse_unknown(self):
         with self.assertRaises(KeyError):
             django_database_url("unknown://")
