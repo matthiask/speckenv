@@ -11,6 +11,8 @@ Next version
 - Applied credentials of Redis cache URLs to all replicas, not just the first.
 - Allowed ``?ssl`` and ``?tls`` without a value in email and mailer URLs;
   they were silently ignored before.
+- Added tests which load the generated settings into Django 3.2 up to
+  Django's main branch.
 
 6.4 (2026-10-21)
 ~~~~~~~~~~~~~~~~

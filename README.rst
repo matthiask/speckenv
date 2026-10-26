@@ -108,6 +108,10 @@ speckenv doesn't depend on Django, if you don't want to use Django or the
 ``speckenv_django`` module you're not paying anything besides a few KiB on the
 harddisk.
 
+The generated settings are tested against Django 3.2 up to Django's main
+branch. Redis caches require Django 4.0, ``STORAGES`` Django 4.2 and
+``MAILERS`` Django 6.1.
+
 
 ``django_cache_url``
 ~~~~~~~~~~~~~~~~~~~~
