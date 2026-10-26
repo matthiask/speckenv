@@ -5,6 +5,9 @@ Change log
 Next version
 ~~~~~~~~~~~~
 
+6.5 (2026-10-26)
+~~~~~~~~~~~~~~~~
+
 - Fixed absolute paths in sqlite database URLs: ``sqlite:////var/db.sqlite3``
   is absolute, ``sqlite:///db.sqlite3`` relative. Also added support for
   in-memory databases using ``sqlite://:memory:``.
