@@ -60,6 +60,10 @@ class DjangoEmailURLTest(TestCase):
         self.assertTrue(config["EMAIL_USE_TLS"])
         self.assertFalse(config["EMAIL_USE_SSL"])
 
+        config = django_email_url("smtp:///?tls")
+        self.assertTrue(config["EMAIL_USE_TLS"])
+        self.assertFalse(config["EMAIL_USE_SSL"])
+
     def test_parse_locmem(self):
         self.assertEqual(
             django_email_url("locmem://")["EMAIL_BACKEND"],

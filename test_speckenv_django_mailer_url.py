@@ -58,6 +58,10 @@ class DjangoMailerURLTest(TestCase):
         self.assertTrue(options["use_tls"])
         self.assertFalse(options["use_ssl"])
 
+        options = django_mailer_url("smtp:///?ssl")["OPTIONS"]
+        self.assertTrue(options["use_ssl"])
+        self.assertFalse(options["use_tls"])
+
     def test_parse_ssl_files(self):
         options = django_mailer_url("smtp://")["OPTIONS"]
         self.assertNotIn("ssl_keyfile", options)

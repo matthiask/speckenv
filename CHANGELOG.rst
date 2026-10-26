@@ -9,6 +9,8 @@ Next version
   is absolute, ``sqlite:///db.sqlite3`` relative. Also added support for
   in-memory databases using ``sqlite://:memory:``.
 - Applied credentials of Redis cache URLs to all replicas, not just the first.
+- Allowed ``?ssl`` and ``?tls`` without a value in email and mailer URLs;
+  they were silently ignored before.
 
 6.4 (2026-10-21)
 ~~~~~~~~~~~~~~~~

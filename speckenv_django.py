@@ -140,7 +140,7 @@ def _smtp_options(url, qs):
 
 def django_email_url(s, /):
     url = parse.urlparse(s)
-    qs = dict(parse.parse_qsl(url.query))
+    qs = dict(parse.parse_qsl(url.query, keep_blank_values=True))
     options = _smtp_options(url, qs)
 
     config = {
@@ -187,7 +187,7 @@ INTERESTING_MAILER_BACKENDS = {
 
 def django_mailer_url(s, /, *, backend=None):
     url = parse.urlparse(s)
-    qs = dict(parse.parse_qsl(url.query))
+    qs = dict(parse.parse_qsl(url.query, keep_blank_values=True))
 
     if "_server_email" in qs:
         raise ValueError(
