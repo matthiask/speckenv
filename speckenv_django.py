@@ -64,7 +64,10 @@ def _redis_cache_url(url, qs):
     if db := url.path.strip("/"):
         options["db"] = db
 
-    locations = [f"redis://{netloc}" for netloc in url.netloc.split(",")]
+    # Credentials apply to all replicas
+    userinfo, _, hosts = url.netloc.rpartition("@")
+    userinfo = f"{userinfo}@" if userinfo else ""
+    locations = [f"redis://{userinfo}{host}" for host in hosts.split(",")]
 
     return {
         # No need to set hiredis; redis-py automatically selects hiredis

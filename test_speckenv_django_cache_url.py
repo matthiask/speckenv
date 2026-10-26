@@ -58,6 +58,16 @@ class DjangoCacheURLTest(TestCase):
             },
         )
 
+    def test_parse_redis_with_replicas_auth(self):
+        url = "redis://user:p%40ss@10.0.0.1:6379,10.0.0.2:6379/"
+        self.assertEqual(
+            django_cache_url(url)["LOCATION"],
+            [
+                "redis://user:p%40ss@10.0.0.1:6379",
+                "redis://user:p%40ss@10.0.0.2:6379",
+            ],
+        )
+
     def test_parse_redis_pool_options(self):
         url = (
             "redis://localhost:6379/1/?key_prefix=example_com"

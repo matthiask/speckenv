@@ -8,6 +8,7 @@ Next version
 - Fixed absolute paths in sqlite database URLs: ``sqlite:////var/db.sqlite3``
   is absolute, ``sqlite:///db.sqlite3`` relative. Also added support for
   in-memory databases using ``sqlite://:memory:``.
+- Applied credentials of Redis cache URLs to all replicas, not just the first.
 
 6.4 (2026-10-21)
 ~~~~~~~~~~~~~~~~
