@@ -1,11 +1,13 @@
 # Thanks to the authors of django-dotenv and django-getenv for the inspiration!
 
+from __future__ import annotations
+
 import ast
 import os
 import sys
 import warnings
 from collections.abc import MutableMapping
-from typing import Any, Callable, TypeVar, Union
+from typing import Any, Callable, TypeVar
 
 
 T = TypeVar("T")
@@ -52,7 +54,7 @@ def env(
     required: bool = False,
     mapping: MutableMapping[str, str] = os.environ,
     coerce: Callable[[Any], Any] = identity,
-    warn: Union[bool, str] = False,
+    warn: bool | str = False,
 ) -> T:
     """
     An easier way to read values from the environment (or from a different
